@@ -1,7 +1,7 @@
 # ESTADO — Clip2Post
 Última actualización: 2026-09-22 | Sesión actual: 3
 
-⏸️ CHECKPOINT — Última acción completada: landing.html revisada por revisor-visual independiente (5 pasadas) — VEREDICTO LISTA: Usabilidad 37/40, Craft 18/20, Copy 19/20 (ver docs/revisiones/landing-veredicto.md) / Siguiente acción exacta: Mostrar la landing al usuario, pedir aprobación, y avanzar a Sesión 4 (onboarding, paywall y login) si aprueba.
+⏸️ CHECKPOINT — Última acción completada: se agregaron elementos visuales a pedido del usuario (íconos en Agitación, diagrama de flujo "video→LinkedIn/X/Instagram" en Solución, íconos en Antes/Después) + pulido de detalle; landing.html re-verificada por revisor-visual (6 pasadas) — VEREDICTO LISTA: Usabilidad 36/40, Craft 18/20, Copy 19/20 (ver docs/revisiones/landing-veredicto.md) / Siguiente acción exacta: Mostrar la landing al usuario, pedir aprobación, y avanzar a Sesión 4 (onboarding, paywall y login) si aprueba.
 
 ## Qué es esta app (3 líneas máximo)
 Plataforma web que convierte un video/podcast largo en publicaciones listas para LinkedIn, hilo de X y estructura de carrusel de Instagram, con el tono de cada red. Usuario: consultores B2B, coaches y creadores independientes que graban contenido pero no tienen tiempo de adaptarlo a cada plataforma. Monetización: suscripción mensual/anual.
