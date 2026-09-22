@@ -33,8 +33,8 @@
 
 ## Trazabilidad y vetos
 - Ruta de diseño: propuesta propia (Protocolo A/B/C)
-- Protocolo A/B/C: opción elegida A ("Estudio Confiable") · descartadas: B (Estudio Creativo — crema/coral, más cálida y menos corporativa) y C (Estudio Editorial — serif/papel, más "publicación" que "herramienta") · página comparativa: direcciones-abc.html (publicada como Artifact: https://claude.ai/artifact/VJaaiQ5gyftZjEfjn5qhmA) · screenshots: N/A (vista en Artifact)
-- Tour de la app: vista-previa-app.html (Artifact: https://claude.ai/artifact/VYJ33yEf9o8ZWwqshDygzX) · vistas incluidas: landing, onboarding, paywall, mecanismo (app interna) · aprobado por el usuario: pendiente de confirmación explícita (se le presenta junto con esta ficha)
+- Protocolo A/B/C: opción elegida A ("Estudio Confiable") · descartadas: B (Estudio Creativo — crema/coral, más cálida y menos corporativa) y C (Estudio Editorial — serif/papel, más "publicación" que "herramienta") · página comparativa: `direcciones-abc.html` (raíz del proyecto; también publicada como Artifact: https://claude.ai/artifact/VJaaiQ5gyftZjEfjn5qhmA) · screenshot: `docs/revisiones/direcciones-abc.png`
+- Tour de la app: `vista-previa-app.html` (raíz del proyecto; también Artifact: https://claude.ai/artifact/VYJ33yEf9o8ZWwqshDygzX) · screenshot: `docs/revisiones/vista-previa-app.png` · vistas incluidas: landing, onboarding, paywall, mecanismo (app interna) · aprobado por el usuario: pendiente de confirmación explícita (se le presenta junto con esta ficha)
 - Paleta derivada de: líder de origen Linear (índigo #5E6AD2 → #8B8FF5, tomado de su misma lógica de color) · Dispositivo ownable elegido: tags de red social por color
 - Registro anti-repetición: paleta índigo-sobre-negro-tintado + par tipográfico Switzer/Switzer quedan VETADOS para el próximo proyecto de este SO
 - Modo (claro/oscuro) DERIVADO por: los 2 líderes principales del nicho exacto (OpusClip, Linear) usan oscuro tintado — coherente con "herramienta seria para mostrar a clientes"
