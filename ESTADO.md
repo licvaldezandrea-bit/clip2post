@@ -1,7 +1,7 @@
 # ESTADO — Clip2Post
 Última actualización: 2026-09-22 | Sesión actual: 1
 
-⏸️ CHECKPOINT — Última acción completada: FICHA-MODELO.md creada (app modelo: OpusClip, 2 señales de revenue verificadas) / Siguiente acción exacta: Esperando respuesta del usuario sobre el nombre de la app (Clip2Post / ContentFlip / RepurposeAI / otro), luego continuar Constitución del Producto (B3).
+⏸️ CHECKPOINT — Última acción completada: Usuario aprobó los 3 mini-acuerdos de negocio (monetización, precio, límites de la app) / Siguiente acción exacta: Presentar Plan Maestro (B5) y esperar aprobación para arrancar Sesión 2 (identidad visual).
 
 ## Qué es esta app (3 líneas máximo)
 Plataforma web que convierte un video/podcast largo en publicaciones listas para LinkedIn, hilo de X y estructura de carrusel de Instagram, con el tono de cada red. Usuario: consultores B2B, coaches y creadores independientes que graban contenido pero no tienen tiempo de adaptarlo a cada plataforma. Monetización: suscripción mensual/anual.
