@@ -1,158 +1,269 @@
-<title>Clip2Post tour</title>
+<!doctype html>
+<html lang="es" data-kit="abc-v2">
+<head>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tour de la app — Clip2Post (dirección A, Estudio Confiable)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap" rel="stylesheet">
+
+<!-- ============================================================================
+  KIT-ABC-V2 — TOUR DE LA APP (54: frame ya tematizado con la dirección elegida)
+  Duplica el chasis de teléfono (statusbar / pantalla / tabbar / home-indicator) y
+  el hero-landing de plantillas-codigo/direcciones-abc/plantilla.html, con los
+  tokens de la Opción A (Estudio Confiable) ya elegida y aprobada en FICHA-ARTE.md.
+  El marcador data-kit="abc-v2" del <html> NO SE BORRA.
+============================================================================= -->
+
 <style>
-  :root{ --page-bg:#F3F2EE; --page-ink:#1B1B18; --page-muted:#77746C; --page-line:#E1DFD8; }
-  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --page-bg:#171714; --page-ink:#F1F0EA; --page-muted:#9C988D; --page-line:#302F2A; } }
-  :root[data-theme="dark"]{ --page-bg:#171714; --page-ink:#F1F0EA; --page-muted:#9C988D; --page-line:#302F2A; }
-  *{box-sizing:border-box;}
-  body{ margin:0; background:var(--page-bg); color:var(--page-ink); font-family:'Inter',system-ui,sans-serif; padding-inline:20px; padding-block:32px 60px; -webkit-font-smoothing:antialiased; }
-  .wrap{max-width:1280px; margin:0 auto;}
-  header.intro{margin-bottom:36px; max-width:680px;}
-  header.intro .eyebrow{font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--page-muted); font-weight:600; margin-bottom:10px;}
-  header.intro h1{font-size:clamp(24px,4vw,32px); margin:0 0 10px; text-wrap:balance;}
-  header.intro p{color:var(--page-muted); font-size:14.5px; line-height:1.55; margin:0;}
-  .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:26px;}
-  .col{display:flex; flex-direction:column; gap:14px;}
-  .col .tag{display:flex; align-items:baseline; gap:8px;}
-  .col .tag .num{font-size:12px; font-weight:700; color:var(--page-muted);}
-  .col .tag .name{font-size:15px; font-weight:600;}
-  .col .desc{font-size:12.5px; color:var(--page-muted); line-height:1.5; margin:0;}
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  :root {
+    --bg: #1a140d; --surface: #241c13; --hundido: #120d08;
+    --text-1: #f5efe6; --text-2: #b0a392;
+    --accent: #ff7a33; --accent-2: #e8b354;
+    --radius-card: 12px; --radius-btn: 999px;
+    --font-display: 'Switzer', monospace; --font-body: 'Switzer', monospace;
+    --shadow-tinta: 74 34 8;
+  }
+  body {
+    background:
+      radial-gradient(1100px 520px at 12% -6%, #f7f7f9, transparent 62%),
+      radial-gradient(900px 460px at 92% 4%, #e2e2e9, transparent 58%),
+      linear-gradient(180deg, #ededf0, #e4e4e9);
+    color: #1c1c1f;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    padding: 32px 20px 64px;
+  }
+  .cabecera { max-width: 1180px; margin: 0 auto 28px; }
+  .cabecera h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.01em; }
+  .cabecera p.sub { margin-top: 6px; font-size: 14px; color: #55555c; max-width: 70ch; line-height: 1.5; }
 
-  .phone{ width:100%; max-width:320px; aspect-ratio:375/720; background:#050506; border-radius:32px; padding:9px; box-shadow:0 1px 2px rgba(0,0,0,.06), 0 12px 32px -14px rgba(0,0,0,.28); margin-inline:auto; }
-  .screen{ width:100%; height:100%; border-radius:24px; overflow:hidden; background:#0C0D10; color:#F1F2F4; font-family:'Switzer','Inter',sans-serif; display:flex; flex-direction:column; position:relative; }
+  .pantallas { max-width: 1280px; margin: 0 auto; display: grid; gap: 30px;
+               grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); }
+  .col { display: flex; flex-direction: column; gap: 12px; }
+  .col .num { font-size: 12px; font-weight: 700; color: #85858e; }
+  .col .name { font-size: 15px; font-weight: 700; color: #1c1c1f; margin-top: 2px; }
+  .col .desc { font-size: 12.5px; color: #55555c; line-height: 1.5; }
 
-  /* -- shared bits -- */
-  .topbar{padding:20px 16px 12px; display:flex; align-items:center; justify-content:space-between;}
-  .brand{font-weight:700; font-size:14px;}
-  .brand b{color:#8B8FF5;}
-  .dot{width:26px; height:26px; border-radius:50%; background:rgba(255,255,255,.06); display:flex; align-items:center; justify-content:center; font-size:12px; color:#9A9CA6;}
+  /* ── Chasis de teléfono (duplicado del kit) ── */
+  .telefono {
+    width: 100%; max-width: 300px; margin: 0 auto;
+    aspect-ratio: 9 / 19.5;
+    background: var(--bg);
+    border: 10px solid #101014;
+    border-radius: 46px;
+    box-shadow: 0 24px 60px rgb(20 18 24 / 0.28);
+    overflow: hidden;
+    position: relative;
+    display: flex; flex-direction: column;
+  }
+  .statusbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 22px 6px; font-size: 13px; font-weight: 600; color: var(--text-1);
+    font-variant-numeric: tabular-nums;
+  }
+  .statusbar .der { display: flex; align-items: center; gap: 5px; }
+  .home-indicator {
+    position: absolute; bottom: 7px; left: 50%; transform: translateX(-50%);
+    width: 116px; height: 5px; border-radius: 999px; opacity: 0.85; background: var(--text-1);
+  }
+  .pantalla { flex: 1; display: flex; flex-direction: column; overflow: hidden;
+              font-family: var(--font-body); color: var(--text-1); padding: 0 18px; }
+  .cta {
+    display: flex; align-items: center; justify-content: center;
+    height: 48px; border-radius: var(--radius-btn); font-size: 14.5px; font-weight: 700;
+    color: var(--bg); background: linear-gradient(180deg, color-mix(in oklab, var(--accent) 86%, white), var(--accent));
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.25), 0 10px 24px -6px color-mix(in oklab, var(--accent) 45%, transparent);
+  }
+  .tabbar {
+    display: flex; align-items: stretch; justify-content: space-around;
+    margin: 10px -18px 0; padding: 8px 8px 16px;
+    border-top: 1px solid color-mix(in oklab, var(--text-2) 18%, transparent);
+    background: color-mix(in oklab, var(--surface) 88%, transparent);
+  }
+  .tabbar a { display: flex; flex-direction: column; align-items: center; gap: 3px;
+              font-size: 9px; font-weight: 600; color: var(--text-2); text-decoration: none; }
+  .tabbar .tab-chip { display: flex; align-items: center; justify-content: center;
+                       width: 34px; height: 24px; border-radius: 9px; }
+  .tabbar a.activa { color: var(--accent); }
+  .tabbar a.activa .tab-chip { background: color-mix(in oklab, var(--accent) 16%, transparent); }
 
-  /* 1. LANDING */
-  .landing .hero{flex:1; display:flex; flex-direction:column; justify-content:center; padding:0 20px 30px; gap:14px;}
-  .landing .kicker{font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:#8B8FF5; font-weight:700;}
-  .landing h2{font-size:21px; line-height:1.25; margin:0; font-weight:700; letter-spacing:-0.01em;}
-  .landing p.sub{font-size:11.5px; color:#9A9CA6; line-height:1.5; margin:0;}
-  .landing .cta{background:#F1F2F4; color:#0C0D10; text-align:center; font-weight:700; font-size:12.5px; padding:12px; border-radius:999px; margin-top:6px;}
-  .landing .sub-cta{text-align:center; font-size:10.5px; color:#6E7079; margin-top:8px;}
-  .landing .proof{display:flex; gap:8px; margin-top:16px;}
-  .landing .proof span{font-size:9.5px; color:#6E7079; background:rgba(255,255,255,.05); padding:5px 9px; border-radius:999px;}
+  /* ── Pantalla 1: LANDING (hero-landing del kit) ── */
+  .p-landing { justify-content: center; padding-bottom: 26px; gap: 14px; }
+  .p-landing .hl-badge {
+    display: inline-flex; align-self: flex-start; align-items: center; gap: 6px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+    color: var(--accent); background: color-mix(in oklab, var(--accent) 12%, transparent);
+    border: 1px solid color-mix(in oklab, var(--accent) 28%, transparent);
+    border-radius: 999px; padding: 4px 10px; margin-top: 22px;
+  }
+  .p-landing h2 { font-family: var(--font-display); font-size: 23px; font-weight: 700;
+                   line-height: 1.16; letter-spacing: -0.01em; margin-top: 12px; }
+  .p-landing h2 em { font-style: normal; color: var(--accent); }
+  .p-landing .sub { margin-top: 10px; font-size: 12px; color: var(--text-2); line-height: 1.5; }
+  .p-landing .sub b { color: var(--text-1); font-weight: 600; }
+  .p-landing .cta { margin-top: 16px; }
+  .p-landing .prueba { margin-top: 8px; font-size: 10px; color: var(--text-2); text-align: center; }
+  .p-landing .proof { display: flex; gap: 8px; margin-top: 18px; }
+  .p-landing .proof span { font-size: 9px; color: var(--text-2); background: var(--surface);
+                            border: 1px solid rgba(255,255,255,.06); padding: 5px 9px; border-radius: 999px; }
 
-  /* 2. ONBOARDING */
-  .onb .body{flex:1; padding:8px 20px 24px; display:flex; flex-direction:column; gap:16px;}
-  .onb .step{font-size:10px; color:#6E7079; font-weight:600; letter-spacing:.04em;}
-  .onb h2{font-size:18px; margin:0; font-weight:700; letter-spacing:-0.01em;}
-  .onb .dropzone{flex:1; border:1.5px dashed rgba(255,255,255,.14); border-radius:16px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; color:#6E7079; font-size:11.5px; text-align:center; padding:20px;}
-  .onb .dropzone b{color:#F1F2F4; font-size:13px;}
-  .onb .field{background:rgba(255,255,255,.045); border:1px solid rgba(255,255,255,.07); border-radius:10px; padding:11px 12px; font-size:11.5px; color:#6E7079;}
-  .onb .cta{background:#8B8FF5; color:#0C0D10; text-align:center; font-weight:700; font-size:12.5px; padding:12px; border-radius:999px;}
+  /* ── Pantalla 2: ONBOARDING ── */
+  .p-onb { padding-top: 20px; gap: 16px; }
+  .p-onb .step { font-size: 10px; color: var(--text-2); font-weight: 700; letter-spacing: .04em; }
+  .p-onb h2 { font-family: var(--font-display); font-size: 18px; font-weight: 700; margin-top: 4px; }
+  .p-onb .dropzone {
+    flex: 1; border: 1.5px dashed color-mix(in oklab, var(--accent) 35%, transparent);
+    border-radius: var(--radius-card); display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 8px; color: var(--text-2); font-size: 11.5px; text-align: center; padding: 20px;
+    background: color-mix(in oklab, var(--accent) 4%, transparent);
+  }
+  .p-onb .dropzone b { color: var(--text-1); font-size: 13px; }
+  .p-onb .field {
+    background: var(--surface); border: 1px solid rgba(255,255,255,.08); border-radius: 10px;
+    padding: 11px 12px; font-size: 11.5px; color: var(--text-2); margin-top: 12px;
+  }
+  .p-onb .cta { margin-top: 12px; margin-bottom: 24px; }
 
-  /* 3. PAYWALL */
-  .pay .body{flex:1; padding:6px 18px 22px; display:flex; flex-direction:column; gap:12px;}
-  .pay .result{background:rgba(139,143,245,.1); border:1px solid rgba(139,143,245,.25); border-radius:12px; padding:10px 12px; font-size:10.5px; color:#C8C9F0; line-height:1.4;}
-  .pay h2{font-size:17px; margin:4px 0 0; font-weight:700; letter-spacing:-0.01em;}
-  .pay p.sub{font-size:11px; color:#9A9CA6; margin:0; line-height:1.5;}
-  .pay .plan{background:#15161B; border:1px solid rgba(139,143,245,.4); border-radius:14px; padding:13px 14px; display:flex; flex-direction:column; gap:2px; position:relative;}
-  .pay .plan .badge{position:absolute; top:-9px; right:12px; background:#E8B354; color:#0C0D10; font-size:9px; font-weight:700; padding:3px 8px; border-radius:999px;}
-  .pay .plan .price{font-size:19px; font-weight:700;}
-  .pay .plan .price span{font-size:11px; font-weight:500; color:#9A9CA6;}
-  .pay .plan .note{font-size:10px; color:#6E7079;}
-  .pay .planb{background:#15161B; border:1px solid rgba(255,255,255,.07); border-radius:14px; padding:11px 14px; font-size:11.5px; color:#9A9CA6; display:flex; justify-content:space-between;}
-  .pay .cta{margin-top:auto; background:#F1F2F4; color:#0C0D10; text-align:center; font-weight:700; font-size:12.5px; padding:13px; border-radius:999px;}
-  .pay .trial{text-align:center; font-size:9.5px; color:#6E7079; margin-top:6px;}
+  /* ── Pantalla 3: PAYWALL ── */
+  .p-pay { padding-top: 18px; gap: 12px; }
+  .p-pay .result {
+    background: color-mix(in oklab, var(--accent) 12%, transparent);
+    border: 1px solid color-mix(in oklab, var(--accent) 30%, transparent);
+    border-radius: var(--radius-card); padding: 10px 12px; font-size: 10.5px; color: var(--text-1); line-height: 1.4;
+  }
+  .p-pay h2 { font-family: var(--font-display); font-size: 17px; font-weight: 700; margin-top: 4px; }
+  .p-pay .sub { font-size: 11px; color: var(--text-2); line-height: 1.5; margin-top: 2px; }
+  .p-pay .plan {
+    background: var(--surface); border: 1px solid color-mix(in oklab, var(--accent) 45%, transparent);
+    border-radius: 14px; padding: 13px 14px; display: flex; flex-direction: column; gap: 2px; position: relative; margin-top: 6px;
+  }
+  .p-pay .plan .badge {
+    position: absolute; top: -9px; right: 12px; background: var(--accent-2); color: #1a140d;
+    font-size: 9px; font-weight: 700; padding: 3px 8px; border-radius: 999px;
+  }
+  .p-pay .plan .price { font-size: 19px; font-weight: 700; font-family: var(--font-display); }
+  .p-pay .plan .price span { font-size: 11px; font-weight: 500; color: var(--text-2); }
+  .p-pay .plan .note { font-size: 10px; color: var(--text-2); }
+  .p-pay .planb {
+    background: var(--surface); border: 1px solid rgba(255,255,255,.07); border-radius: 14px;
+    padding: 11px 14px; font-size: 11.5px; color: var(--text-2); display: flex; justify-content: space-between;
+  }
+  .p-pay .cta { margin-top: auto; margin-bottom: 6px; }
+  .p-pay .trial { text-align: center; font-size: 9.5px; color: var(--text-2); margin-bottom: 20px; }
 
-  /* 4. MECANISMO / resultado (app interna) */
-  .app .body{flex:1; padding:2px 18px 18px; display:flex; flex-direction:column; gap:10px; overflow:hidden;}
-  .app .src{display:flex; gap:10px; align-items:center; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.06); border-radius:12px; padding:10px 12px; margin-bottom:2px;}
-  .app .src .thumb{width:36px; height:36px; border-radius:8px; background:linear-gradient(155deg,#2A2C36,#16171B); flex:none;}
-  .app .src .meta{font-size:10.5px; color:#8D8F99; line-height:1.4;}
-  .app .src .meta b{color:#F1F2F4; font-weight:600; display:block; font-size:12px;}
-  .app .card{background:#15161B; border:1px solid rgba(255,255,255,.055); border-radius:14px; padding:12px 13px 11px;}
-  .app .card .head{display:flex; align-items:center; justify-content:space-between; margin-bottom:7px;}
-  .app .card .net{font-size:10px; font-weight:600; letter-spacing:.03em; text-transform:uppercase; color:#8B8FF5;}
-  .app .card .copy-btn{font-size:9.5px; font-weight:600; color:#0C0D10; background:#F1F2F4; padding:4px 9px; border-radius:999px;}
-  .app .card p{margin:0; font-size:11px; line-height:1.5; color:#D3D4DA;}
-  .app .card p b{color:#F1F2F4;}
+  /* ── Pantalla 4: MECANISMO (app interna) ── */
+  .p-app { padding-top: 20px; gap: 10px; }
+  .p-app .src {
+    display: flex; gap: 10px; align-items: center; background: var(--surface);
+    border: 1px solid rgba(255,255,255,.06); border-radius: var(--radius-card); padding: 10px 12px;
+  }
+  .p-app .src .thumb { width: 36px; height: 36px; border-radius: 8px;
+    background: linear-gradient(155deg, color-mix(in oklab, var(--accent) 40%, var(--surface)), var(--hundido)); flex: none; }
+  .p-app .src .meta { font-size: 10.5px; color: var(--text-2); line-height: 1.4; }
+  .p-app .src .meta b { color: var(--text-1); font-weight: 600; display: block; font-size: 12px; }
+  .p-app .card { background: var(--surface); border: 1px solid rgba(255,255,255,.055); border-radius: var(--radius-card); padding: 12px 13px 11px; }
+  .p-app .card .head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; }
+  .p-app .card .net { font-size: 10px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; color: var(--accent); }
+  .p-app .card .copy-btn { font-size: 9.5px; font-weight: 700; color: var(--bg); background: var(--text-1); padding: 4px 9px; border-radius: 999px; }
+  .p-app .card p { margin: 0; font-size: 11px; line-height: 1.5; color: var(--text-2); }
+  .p-app .card p b { color: var(--text-1); }
 
-  footer{margin-top:44px; padding-top:20px; border-top:1px solid var(--page-line); font-size:12px; color:var(--page-muted); text-align:center;}
+  footer { max-width: 1280px; margin: 44px auto 0; font-size: 12.5px; color: #6a6a72;
+           border-top: 1px solid #d0d0d6; padding-top: 16px; line-height: 1.6; }
 </style>
+</head>
+<body>
 
-<div class="wrap">
-  <header class="intro">
-    <div class="eyebrow">Sesión 2 · Tour de la app</div>
-    <h1>Clip2Post — recorrido con la dirección A</h1>
-    <p>Las 4 pantallas clave del camino de venta, ya con la paleta y tipografía elegidas
-    (Estudio Confiable: negro tintado + índigo + Switzer). Así se va a sentir la app de
-    principio a fin, antes de construir una sola línea de código.</p>
-  </header>
+<header class="cabecera">
+  <h1>Tour de la app — Clip2Post (Estudio Confiable)</h1>
+  <p class="sub">Las 4 pantallas clave del camino de venta, con el chasis y los tokens de la
+  dirección A ya elegida (fondo cálido carbón-marrón, acento naranja). Así se va a sentir la app
+  de principio a fin, antes de construir una sola línea de código.</p>
+</header>
 
-  <div class="grid">
+<div class="pantallas">
 
-    <div class="col">
-      <div class="tag"><span class="num">1</span><span class="name">Landing</span></div>
-      <p class="desc">Lo primero que ve Carlos: la promesa central, sin ruido.</p>
-      <div class="phone"><div class="screen landing">
-        <div class="topbar"><div class="brand">Clip<b>2</b>Post</div><div class="dot">☰</div></div>
-        <div class="hero">
-          <div class="kicker">Para consultores y creadores B2B</div>
-          <h2>Tu video ya es tu post de LinkedIn. Solo falta pegarlo.</h2>
-          <p class="sub">Sube un video o pega un link. En 2 minutos tienes el post, el hilo de X y el carrusel listos — con tu tono, no el de un bot.</p>
-          <div class="cta">Probar gratis — sin tarjeta</div>
-          <div class="sub-cta">7 días de prueba · cancela cuando quieras</div>
-          <div class="proof"><span>+10K piezas generadas</span><span>4.8★</span></div>
-        </div>
-      </div></div>
+  <div class="col">
+    <p class="num">1</p><p class="name">Landing</p>
+    <p class="desc">Lo primero que ve Carlos: la promesa central, sin ruido.</p>
+    <div class="telefono">
+      <div class="statusbar"><span>9:41</span><span class="der">●●●</span></div>
+      <div class="pantalla p-landing">
+        <span class="hl-badge">Para consultores y creadores B2B</span>
+        <h2>Tu video ya es tu post de LinkedIn. <em>Solo falta pegarlo.</em></h2>
+        <p class="sub">Sube un video o pega un link. En 2 minutos tienes el post, el hilo de X y el carrusel listos — con tu tono, no el de un bot.</p>
+        <div class="cta">Probar gratis — sin tarjeta</div>
+        <p class="prueba">7 días de prueba · cancela cuando quieras</p>
+        <div class="proof"><span>+10K piezas generadas</span><span>4.8★</span></div>
+      </div>
+      <div class="home-indicator"></div>
     </div>
-
-    <div class="col">
-      <div class="tag"><span class="num">2</span><span class="name">Onboarding</span></div>
-      <p class="desc">Un solo paso: pegar el video. Sin cuestionarios largos.</p>
-      <div class="phone"><div class="screen onb">
-        <div class="topbar"><div class="dot">←</div><div class="brand">Clip<b>2</b>Post</div><div style="width:26px"></div></div>
-        <div class="body">
-          <div class="step">PASO 1 DE 1</div>
-          <h2>Pega tu video o súbelo</h2>
-          <div class="dropzone"><b>Arrastra tu archivo</b>o pega un link de YouTube, Drive o Zoom</div>
-          <div class="field">🔗 https://youtube.com/watch?v=...</div>
-          <div class="cta">Generar mi primer resultado</div>
-        </div>
-      </div></div>
-    </div>
-
-    <div class="col">
-      <div class="tag"><span class="num">3</span><span class="name">Paywall</span></div>
-      <p class="desc">Aparece DESPUÉS de ver el primer resultado gratis — nunca antes.</p>
-      <div class="phone"><div class="screen pay">
-        <div class="topbar"><div class="dot">←</div><div class="brand">Clip<b>2</b>Post</div><div style="width:26px"></div></div>
-        <div class="body">
-          <div class="result">✓ Tu primer post de LinkedIn ya está listo. Desbloquea para copiarlo y generar el hilo de X + el carrusel.</div>
-          <h2>Sigue publicando sin límite</h2>
-          <p class="sub">Videos ilimitados, exportación sin marca de agua, tono personalizado.</p>
-          <div class="plan"><span class="badge">7 días gratis</span><div class="price">$89<span>/año</span></div><div class="note">= $7.42/mes · ahorras 43%</div></div>
-          <div class="planb"><span>Mensual</span><span>$12.99/mes</span></div>
-          <div class="cta">Empezar prueba gratis</div>
-          <div class="trial">Sin tarjeta hoy · te avisamos antes de cobrar</div>
-        </div>
-      </div></div>
-    </div>
-
-    <div class="col">
-      <div class="tag"><span class="num">4</span><span class="name">Mecanismo (app interna)</span></div>
-      <p class="desc">El corazón del producto: 1 fuente, 3 salidas listas para copiar.</p>
-      <div class="phone"><div class="screen app">
-        <div class="topbar"><div class="dot">←</div><div class="brand">Clip<b>2</b>Post</div><div style="width:26px"></div></div>
-        <div class="body">
-          <div class="src"><div class="thumb"></div><div class="meta"><b>Cómo cerrar clientes B2B</b>14:32 · listo</div></div>
-          <div class="card"><div class="head"><span class="net">LinkedIn</span><span class="copy-btn">Copiar</span></div><p><b>Perdí 6 horas</b> reescribiendo un video para 3 redes. Dejé de hacerlo a mano...</p></div>
-          <div class="card"><div class="head"><span class="net">Hilo de X</span><span class="copy-btn">Copiar</span></div><p>1/ <b>Nadie te dice esto</b> sobre reutilizar contenido en X...</p></div>
-          <div class="card"><div class="head"><span class="net">Carrusel IG</span><span class="copy-btn">Copiar</span></div><p>Slide 1 — <b>"El error que comete el 90%..."</b></p></div>
-        </div>
-      </div></div>
-    </div>
-
   </div>
 
-  <footer>Clip2Post · Tour aprobado con la dirección A (Estudio Confiable) — base para las Sesiones 3-5.</footer>
+  <div class="col">
+    <p class="num">2</p><p class="name">Onboarding</p>
+    <p class="desc">Un solo paso: pegar el video. Sin cuestionarios largos.</p>
+    <div class="telefono">
+      <div class="statusbar"><span>9:41</span><span class="der">●●●</span></div>
+      <div class="pantalla p-onb">
+        <p class="step">PASO 1 DE 1</p>
+        <h2>Pega tu video o súbelo</h2>
+        <div class="dropzone"><b>Arrastra tu archivo</b>o pega un link de YouTube, Drive o Zoom</div>
+        <div class="field">🔗 https://youtube.com/watch?v=...</div>
+        <div class="cta">Generar mi primer resultado</div>
+      </div>
+      <div class="home-indicator"></div>
+    </div>
+  </div>
+
+  <div class="col">
+    <p class="num">3</p><p class="name">Paywall</p>
+    <p class="desc">Aparece DESPUÉS de ver el primer resultado gratis — nunca antes.</p>
+    <div class="telefono">
+      <div class="statusbar"><span>9:41</span><span class="der">●●●</span></div>
+      <div class="pantalla p-pay">
+        <div class="result">✓ Tu primer post de LinkedIn ya está listo. Desbloquea para copiarlo y generar el hilo de X + el carrusel.</div>
+        <h2>Sigue publicando sin límite</h2>
+        <p class="sub">Videos ilimitados, exportación sin marca de agua, tono personalizado.</p>
+        <div class="plan"><span class="badge">7 días gratis</span><div class="price">$89<span>/año</span></div><div class="note">= $7.42/mes · ahorras 43%</div></div>
+        <div class="planb"><span>Mensual</span><span>$12.99/mes</span></div>
+        <div class="cta">Empezar prueba gratis</div>
+        <p class="trial">Sin tarjeta hoy · te avisamos antes de cobrar</p>
+      </div>
+      <div class="home-indicator"></div>
+    </div>
+  </div>
+
+  <div class="col">
+    <p class="num">4</p><p class="name">Mecanismo (app interna)</p>
+    <p class="desc">El corazón del producto: 1 fuente, 3 salidas listas para copiar.</p>
+    <div class="telefono">
+      <div class="statusbar"><span>9:41</span><span class="der">●●●</span></div>
+      <div class="pantalla p-app">
+        <div class="src"><div class="thumb"></div><div class="meta"><b>Cómo cerrar clientes B2B</b>14:32 · listo</div></div>
+        <div class="card"><div class="head"><span class="net">LinkedIn</span><span class="copy-btn">Copiar</span></div><p><b>Perdí 6 horas</b> reescribiendo un video para 3 redes. Dejé de hacerlo a mano...</p></div>
+        <div class="card"><div class="head"><span class="net">Hilo de X</span><span class="copy-btn">Copiar</span></div><p>1/ <b>Nadie te dice esto</b> sobre reutilizar contenido en X...</p></div>
+        <div class="card"><div class="head"><span class="net">Carrusel IG</span><span class="copy-btn">Copiar</span></div><p>Slide 1 — <b>"El error que comete el 90%..."</b></p></div>
+        <nav class="tabbar" aria-label="Navegación">
+          <a class="activa" href="#"><span class="tab-chip">🏠</span>Inicio</a>
+          <a href="#"><span class="tab-chip">🎬</span>Videos</a>
+          <a href="#"><span class="tab-chip">📋</span>Piezas</a>
+          <a href="#"><span class="tab-chip">👤</span>Cuenta</a>
+        </nav>
+      </div>
+      <div class="home-indicator"></div>
+    </div>
+  </div>
+
 </div>
+
+<footer>
+  Clip2Post · Tour construido duplicando el chasis del kit (54) con los tokens de la dirección A
+  (Estudio Confiable, ya aprobada en FICHA-ARTE.md) · marcador data-kit="abc-v2" intacto.
+</footer>
+
+</body>
+</html>

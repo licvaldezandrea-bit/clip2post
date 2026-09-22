@@ -1,7 +1,7 @@
 # ESTADO — Clip2Post
 Última actualización: 2026-09-22 | Sesión actual: 2
 
-⏸️ CHECKPOINT — Última acción completada: Tour de la app (4 pantallas) publicado y dirección de arte A aprobada por el usuario / Siguiente acción exacta: Pedir confirmación final del tour (vista-previa-app.html) y cerrar FICHA-ARTE.md, luego seguir con paleta completa/tokens CSS y mapa de rutas de la Sesión 2.
+⏸️ CHECKPOINT — Última acción completada: direcciones-abc.html y vista-previa-app.html reconstruidos desde el kit oficial (data-kit="abc-v2"), con el ajuste de color pedido por el usuario (naranja sobre carbón-marrón cálido en vez de índigo sobre negro) / Siguiente acción exacta: Pedir confirmación final del tour (vista-previa-app.html) y cerrar FICHA-ARTE.md, luego seguir con paleta completa/tokens CSS y mapa de rutas de la Sesión 2.
 
 ## Qué es esta app (3 líneas máximo)
 Plataforma web que convierte un video/podcast largo en publicaciones listas para LinkedIn, hilo de X y estructura de carrusel de Instagram, con el tono de cada red. Usuario: consultores B2B, coaches y creadores independientes que graban contenido pero no tienen tiempo de adaptarlo a cada plataforma. Monetización: suscripción mensual/anual.
@@ -20,11 +20,11 @@ Plataforma web que convierte un video/podcast largo en publicaciones listas para
 > La ficha COMPLETA vive en `FICHA-ARTE.md` en la raíz. Aquí solo el resumen + registro anti-repetición.
 - FICHA-ARTE.md: existe — dirección elegida por el usuario: SÍ (opción A) — 2026-09-22. Cierre final pendiente de confirmar el tour.
 - ¿Hubo referencia visual del usuario?: NO → fusión de líderes (OpusClip + Linear), Protocolo A/B/C
-- Resumen: fondo #0C0D10 · superficie #15161B · acento #8B8FF5 (índigo) · 2ª nota #E8B354 (ámbar) · Display "Switzer" · Body "Switzer" · radio 12px (cards) / 999px (pills)
+- Resumen: fondo #1A140D (carbón-marrón cálido) · superficie #241C13 · acento #FF7A33 (naranja) · 2ª nota #E8B354 (ámbar) · Display "Switzer" · Body "Switzer" · radio 12px (cards) / 999px (pills)
 - Personalidad: confiable · eficiente · autoritativa (sin ser fría)
 - Dispositivo ownable: tags de color por red social (LinkedIn/X/Instagram) junto a cada pieza generada
-- REGISTRO ANTI-REPETICIÓN (29/54): paleta índigo-sobre-negro-tintado + par tipográfico Switzer/Switzer quedan VETADOS para el próximo proyecto del SO. Dirección del banco 54: N/A (dispositivo propio, justificado en la ficha)
-- Artifacts: [3 direcciones A/B/C](https://claude.ai/artifact/VJaaiQ5gyftZjEfjn5qhmA) · [Tour de la app](https://claude.ai/artifact/VYJ33yEf9o8ZWwqshDygzX)
+- REGISTRO ANTI-REPETICIÓN (29/54): paleta naranja-sobre-carbón-cálido + par tipográfico Switzer/Switzer quedan VETADOS para el próximo proyecto del SO. Dirección del banco 54: N/A (dispositivo propio, justificado en la ficha)
+- Entregables en el repo: `direcciones-abc.html` + `vista-previa-app.html` (raíz, construidos desde el kit oficial `plantillas-codigo/direcciones-abc/plantilla.html`) · screenshots en `docs/revisiones/`
 
 ## Avatar (de la ficha ya investigada — FICHA-AVATAR.md se redacta en Sesión 3)
 - Nombre: Carlos, 34 años, consultor B2B / creador independiente de alto valor
