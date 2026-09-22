@@ -28,7 +28,8 @@
 - 2ª nota: #E8B354 (ámbar — SOLO en: badge de plan Pro, hitos/rachas — nunca en botones de acción)
 - Semánticos: éxito #34D399 · error #F87171 · aviso #FBBF24
 - Display: Switzer (pesos 600/700) · Body: Switzer (pesos 400/500) · Escala: display 28px / title 20px / body 14px / label 11px
-- Radio: 12px (cards) · 999px (pills, botones, avatares) · Profundidad: 3 niveles por luminancia (fondo/superficie/hundido) + bordes rgba(255,255,255,.06), sin sombras duras · Espaciado base: 4·8·12·16·24·32·48·64
+- Variante compacta (pantallas densas de conversión con muchos bloques en 1 scroll, ej. paywall.html): se colapsa a 3 tamaños (display 24px / body 13px / label 11px, sin nivel title intermedio) para cumplir la regla de máx. 3 tamaños activos por pantalla — decisión de craft, no reemplaza la escala base en el resto de la app
+- Radio: 12px (cards) · 999px (pills, botones, avatares) · 8px (chips inline, ej. tag "hilo de X") · Profundidad: 3 niveles por luminancia (fondo/superficie/hundido) + bordes rgba(255,255,255,.06), sin sombras duras · Espaciado base: 4·8·12·16·24·32·48·64
 - Dispositivo ownable: tags de color por red social (LinkedIn azul #0A66C2 solo como tag, X negro/blanco, Instagram degradé solo en el tag — nunca en UI general) junto a cada pieza de contenido generada
 - Motion signature: easing cubic-bezier(.2,.8,.2,1) · stagger 60ms entre cards al terminar de generar · firma: cada card de resultado entra con fade + slide-up 8px, secuencial por red (LinkedIn → X → Instagram)
 

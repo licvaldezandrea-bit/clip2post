@@ -1,7 +1,7 @@
 # ESTADO — Clip2Post
 Última actualización: 2026-09-22 | Sesión actual: 5
 
-⏸️ CHECKPOINT — Última acción completada: Sesión 5 completa — app.html (app interna: Inicio/M0 con dato de la semana + CTA de 1 tap + insight en voz del mecanismo, Piezas con filtro por red y por video, Cuenta) construida y verificada por revisor-visual (7 pasadas) — VEREDICTO LISTA: Usabilidad 36/40, Craft 18/20 (ver docs/revisiones/app-veredicto.md) / Siguiente acción exacta: responder el feedback externo del usuario sobre el paywall (compartió un análisis de Gemini) y, tras su aprobación, avanzar a Sesión 6 (integraciones reales y seguridad).
+⏸️ CHECKPOINT — Última acción completada: paywall.html mejorado (línea de tiempo del trial Día 0/5/7 fusionada con garantía, CTA fijo al fondo del viewport, precios en formato US$ explícito, estado de error de pago diseñado, disciplina de acento naranja restringida a CTA/selección/H1) y re-verificado por revisor-visual (8 pasadas totales) — VEREDICTO LISTA: Usabilidad 37/40, Craft 18/20, Copy 19/20 (ver docs/revisiones/paywall-veredicto.md) / Siguiente acción exacta: informar al usuario y, con su aprobación, avanzar a Sesión 6 (integraciones reales y seguridad: Supabase, IA real, Hotmart, dominio).
 
 ## Qué es esta app (3 líneas máximo)
 Plataforma web que convierte un video/podcast largo en publicaciones listas para LinkedIn, hilo de X y estructura de carrusel de Instagram, con el tono de cada red. Usuario: consultores B2B, coaches y creadores independientes que graban contenido pero no tienen tiempo de adaptarlo a cada plataforma. Monetización: suscripción mensual/anual.
@@ -76,6 +76,7 @@ Plataforma web que convierte un video/podcast largo en publicaciones listas para
 - Sesión 3 — Página de ventas: FICHA-AVATAR.md, mecanismo "El Multiplicador de Voz" bautizado, landing.html con 10 secciones + elementos visuales, revisor-visual LISTA (36/40·18/20·19/20) — 2026-09-22
 - Sesión 4 — Onboarding (4 pasos), paywall (narrativa de 7 preguntas) y login (passwordless) construidos, los 3 verificados LISTA por revisor-visual — 2026-09-22
 - Sesión 5 — App interna (Inicio/Piezas/Cuenta), loop de retención documentado, revisor-visual LISTA (36/40·18/20) tras 7 rondas de pulido — 2026-09-22
+- Sesión 5 (extensión) — Paywall mejorado con línea de tiempo del trial + CTA fijo + disciplina de color, revisor-visual LISTA (37/40·18/20·19/20) tras 8 rondas — 2026-09-22
 
 ## Sesión en progreso 🔧
 (ninguna — Sesión 5 cerrada, pendiente aprobación del usuario para arrancar Sesión 6)
