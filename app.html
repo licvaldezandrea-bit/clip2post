@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clip2Post — Tu contenido</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#1a140d; --surface:#241c13; --hundido:#120d08;
+    --text-1:#f5efe6; --text-2:#b0a392; --line: rgba(245,239,230,.09);
+    --accent:#ff7a33; --accent-2:#e8b354;
+    --radius-card:12px; --radius-btn:999px;
+    --font-display:'Switzer',sans-serif; --font-body:'Switzer',sans-serif;
+    --li:#0a66c2; --x:#f5efe6; --ig:#ff7a33;
+  }
+  *{box-sizing:border-box;}
+  html,body{overflow-x:hidden; max-width:100%; height:100%;}
+  body{margin:0; background:var(--bg); color:var(--text-1); font-family:var(--font-body); -webkit-font-smoothing:antialiased; line-height:1.5; min-height:100vh; display:flex; flex-direction:column;}
+  @media (prefers-reduced-motion: reduce){ *{animation-duration:.01ms !important; transition-duration:.01ms !important;} }
+  a:focus-visible, button:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:8px;}
+  @keyframes rise{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
+  @keyframes cardIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+  .reveal{opacity:0; animation:rise .45s cubic-bezier(.2,.8,.2,1) forwards;}
+  .reveal.d1{animation-delay:0s;} .reveal.d2{animation-delay:.05s;} .reveal.d3{animation-delay:.1s;}
+  .reveal.d4{animation-delay:.15s;} .reveal.d5{animation-delay:.2s;}
+
+  /* topbar */
+  .topbar{display:flex; align-items:center; justify-content:space-between; padding:18px 20px 6px; flex:none;}
+  .brand{font-weight:800; font-size:16px;}
+  .brand b{color:var(--accent);}
+  .avatar{width:44px; height:44px; border-radius:50%; background:var(--surface); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:var(--text-2); cursor:pointer;}
+
+  main{flex:1; overflow-y:auto; padding:6px 20px 100px; max-width:520px; margin:0 auto; width:100%;}
+  .view{display:none;}
+  .view.active{display:block; animation:viewIn .25s cubic-bezier(.2,.8,.2,1) both;}
+  @keyframes viewIn{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+  h1{font-family:var(--font-display); font-size:22px; font-weight:800; margin:14px 0 0; letter-spacing:-0.01em;}
+  h2.sec{font-family:var(--font-display); font-size:15px; font-weight:700; margin:26px 0 12px;}
+
+  /* M0.1 pieza 1 — el dato de hoy/semana */
+  .stat-hero{margin-top:16px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-card); padding:18px;}
+  .stat-hero .label{font-size:11.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--text-2);}
+  .stat-hero .row{display:flex; align-items:baseline; gap:18px; margin-top:8px;}
+  .stat-hero .num{font-family:var(--font-display); font-size:32px; font-weight:800; color:var(--accent); font-variant-numeric:tabular-nums;}
+  .stat-hero .num small{font-size:13px; font-weight:600; color:var(--text-2);}
+  .stat-hero .sub{font-size:12px; color:var(--text-2); margin-top:2px;}
+
+  /* M0.1 pieza 2 — la acción de 1 tap */
+  .cta-new{
+    margin-top:16px; width:100%; display:flex; align-items:center; justify-content:center; gap:10px;
+    height:56px; border-radius:var(--radius-btn); font-weight:700; font-size:15.5px; color:var(--bg);
+    border:none; cursor:pointer;
+    background:linear-gradient(180deg, color-mix(in oklab, var(--accent) 86%, white), var(--accent));
+    box-shadow:inset 0 1px 0 rgb(255 255 255/.3), 0 16px 34px -10px color-mix(in oklab, var(--accent) 55%, transparent);
+    transition:filter .15s ease, transform .15s ease;
+  }
+  .cta-new:hover{filter:brightness(1.06);} .cta-new:active{transform:scale(.98);}
+
+  /* M0.1 pieza 3 — estado de racha (visible, no protagonista) */
+  .streak-row{margin-top:10px; padding-top:10px; border-top:1px solid color-mix(in oklab, var(--accent) 15%, transparent); display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-2);}
+  .streak-row svg{color:var(--accent-2); flex:none;}
+
+  /* M0.1 pieza 4 — el insight en voz del mecanismo */
+  .insight{margin-top:14px; display:flex; gap:10px; align-items:flex-start; background:color-mix(in oklab, var(--accent) 7%, transparent); border:1px solid color-mix(in oklab, var(--accent) 20%, transparent); border-radius:var(--radius-card); padding:13px 14px;}
+  .insight svg{flex:none; color:var(--accent); margin-top:1px;}
+  .insight p{margin:0; font-size:12.5px; color:var(--text-1); line-height:1.5;}
+  .insight p b{color:var(--accent);}
+
+  /* lista de videos */
+  .vcard{display:flex; gap:12px; align-items:center; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-card); padding:13px; margin-bottom:10px; cursor:pointer; transition:border-color .15s ease;}
+  .vcard:hover{border-color:color-mix(in oklab, var(--accent) 30%, var(--line));}
+  .vcard .thumb{width:44px; height:44px; border-radius:var(--radius-card); background:linear-gradient(155deg, color-mix(in oklab, var(--accent) 45%, var(--surface)), var(--hundido)); flex:none; display:flex; align-items:center; justify-content:center; color:var(--accent);}
+  .vcard .meta{flex:1; min-width:0;}
+  .vcard .meta b{display:block; font-size:13.5px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .vcard .meta span{font-size:11.5px; color:var(--text-2);}
+  .vcard .status{font-size:10.5px; font-weight:700; padding:4px 9px; border-radius:999px; flex:none;}
+  .vcard .status.listo{background:color-mix(in oklab, #34D399 16%, transparent); color:#34D399;}
+  .vcard .status.proc{background:color-mix(in oklab, #60A5FA 16%, transparent); color:#60A5FA;}
+  .hidden{display:none !important;}
+  .video-filter-banner{margin-top:16px; display:flex; align-items:center; justify-content:space-between; background:color-mix(in oklab, var(--accent) 10%, transparent); border:1px solid color-mix(in oklab, var(--accent) 26%, transparent); border-radius:var(--radius-card); padding:10px 14px; font-size:12.5px; color:var(--text-1);}
+  .video-filter-banner button{background:none; border:none; color:var(--accent); font-weight:700; font-size:12.5px; cursor:pointer;}
+  .empty-state{display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px; padding:40px 20px; color:var(--text-2);}
+  .empty-state svg{color:var(--accent);}
+  .empty-state b{color:var(--text-1); font-size:15px;}
+  .empty-state span{font-size:13px; max-width:32ch;}
+  .error-state{display:flex; gap:10px; align-items:flex-start; background:color-mix(in oklab, #F87171 10%, transparent); border:1px solid color-mix(in oklab, #F87171 30%, transparent); border-radius:var(--radius-card); padding:13px 14px; margin-bottom:10px;}
+  .error-state svg{flex:none; margin-top:1px;}
+  .error-state b{display:block; font-size:13px; color:var(--text-1);}
+  .error-state span{font-size:12px; color:var(--text-2);}
+
+  /* ── PIEZAS (galería) ── */
+  .chips-filter{display:flex; gap:8px; margin-top:16px; overflow-x:auto; padding-bottom:2px;}
+  .chip-f{flex:none; font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:999px; background:var(--surface); border:1px solid var(--line); color:var(--text-2); cursor:pointer; transition:all .15s ease;}
+  .chip-f.on{background:color-mix(in oklab, var(--accent) 14%, var(--surface)); border-color:var(--accent); color:var(--accent);}
+  .pcard{margin-top:12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-card); padding:14px;}
+  .pcard .head{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;}
+  .pcard .net{font-size:10.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase;}
+  .net-li{color:var(--li);} .net-x{color:var(--x);}
+  .net-ig{background:linear-gradient(90deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .pcard .src-tag{font-size:10.5px; color:var(--text-2);}
+  .pcard p{margin:0; font-size:13px; color:var(--text-1); line-height:1.55;}
+  .copy-btn{font-size:11px; font-weight:700; color:var(--bg); background:var(--text-1); padding:5px 11px; border-radius:999px; border:none; cursor:pointer; flex:none; transition:transform .1s ease;}
+  .copy-btn:active{transform:scale(.94);}
+  .copy-btn.done{background:#34D399; color:#0c1f16;}
+
+  /* ── CUENTA ── */
+  .plan-card{margin-top:16px; background:linear-gradient(155deg, color-mix(in oklab, var(--accent) 12%, var(--surface)), var(--surface)); border:1px solid color-mix(in oklab, var(--accent) 30%, transparent); border-radius:var(--radius-card); padding:18px;}
+  .plan-card .l{font-size:11.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--accent);}
+  .plan-card h3{font-family:var(--font-display); font-size:19px; font-weight:800; margin:6px 0 2px;}
+  .plan-card p{margin:0; font-size:12.5px; color:var(--text-2);}
+  .acc-row{display:flex; align-items:center; justify-content:space-between; padding:15px 4px; border-bottom:1px solid var(--line); font-size:14px;}
+  .acc-row.action{cursor:pointer;}
+  .acc-row.action .val{color:var(--accent); font-weight:600;}
+  .soon-badge{display:inline-block; margin-left:6px; font-size:10px; font-weight:700; color:var(--text-2); background:var(--hundido); border:1px solid var(--line); padding:2px 7px; border-radius:999px; vertical-align:1px;}
+  .acc-row span.lbl{display:flex; align-items:center; gap:12px;}
+  .acc-row svg{color:var(--text-2);}
+  .acc-row .val{color:var(--text-2); font-size:12.5px;}
+  .logout{width:100%; margin-top:24px; height:48px; border-radius:var(--radius-btn); background:none; border:1px solid var(--line); color:#F87171; font-weight:600; font-size:14px; cursor:pointer;}
+
+  /* tab bar */
+  .tabbar{
+    position:fixed; bottom:0; left:0; right:0; z-index:20;
+    display:flex; justify-content:space-around; padding:10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+    background:color-mix(in oklab, var(--bg) 90%, transparent); backdrop-filter:blur(10px);
+    border-top:1px solid var(--line);
+  }
+  .tabbar button{background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:4px; color:var(--text-2); font-size:10.5px; font-weight:600; cursor:pointer; padding:4px 18px;}
+  .tabbar button.on{color:var(--accent);}
+  .tabbar button .tab-chip{width:38px; height:26px; border-radius:var(--radius-card); display:flex; align-items:center; justify-content:center;}
+  .tabbar button.on .tab-chip{background:color-mix(in oklab, var(--accent) 14%, transparent);}
+
+  /* ── MODAL nuevo video ── */
+  .modal-overlay{position:fixed; inset:0; background:rgba(9,6,3,.6); backdrop-filter:blur(2px); z-index:40; display:none; align-items:flex-end;}
+  .modal-overlay.show{display:flex;}
+  .modal{width:100%; max-width:520px; margin:0 auto; background:var(--bg); border-radius:20px 20px 0 0; padding:20px 20px calc(20px + env(safe-area-inset-bottom, 0px)); max-height:90vh; overflow-y:auto; animation:slideUp .3s cubic-bezier(.2,.8,.2,1) both;}
+  @keyframes slideUp{from{transform:translateY(30px); opacity:0;} to{transform:translateY(0); opacity:1;}}
+  .modal .grabber{width:36px; height:4px; background:var(--line); border-radius:999px; margin:0 auto 16px;}
+  .modal .mhead{display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;}
+  .modal h2{font-family:var(--font-display); font-size:18px; font-weight:800; margin:0;}
+  .modal .close{width:44px; height:44px; border-radius:50%; background:var(--surface); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; color:var(--text-2); cursor:pointer;}
+  .dropzone{margin-top:16px; border:1.5px dashed color-mix(in oklab, var(--accent) 35%, transparent); border-radius:var(--radius-card); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; text-align:center; padding:26px; background:color-mix(in oklab, var(--accent) 4%, transparent); cursor:pointer;}
+  .dropzone svg{color:var(--accent);}
+  .dropzone b{font-size:14px;}
+  .dropzone span{font-size:12px; color:var(--text-2);}
+  .mfield{margin-top:14px; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:13px 14px; display:flex; align-items:center; gap:10px;}
+  .mfield.err{border-color:#F87171;}
+  .errmsg{font-size:12px; color:#F87171; margin-top:6px; display:none;}
+  .errmsg.show{display:block;}
+  .mfield input{background:none; border:none; color:var(--text-1); font-family:var(--font-body); font-size:14px; flex:1; outline:none;}
+  .mfield input::placeholder{color:var(--text-2);}
+  .modal .cta-new{margin-top:18px;}
+
+  /* estado de generando dentro del modal */
+  .gen-state{display:none; flex-direction:column; align-items:center; text-align:center; gap:20px; padding:20px 0 10px;}
+  .gen-state.show{display:flex;}
+  #uploadState.hidden{display:none;}
+  .ring-wrap{position:relative; width:96px; height:96px;}
+  .ring-wrap svg{transform:rotate(-90deg);}
+  .ring-bg{stroke:var(--surface);}
+  .ring-fg{stroke:var(--accent); stroke-linecap:round; stroke-dasharray:245; stroke-dashoffset:245; animation:dash 2.2s cubic-bezier(.4,0,.2,1) forwards;}
+  @keyframes dash{to{stroke-dashoffset:30;}}
+  .gen-list{display:flex; flex-direction:column; gap:8px; font-size:12.5px; color:var(--text-2); text-align:left; align-self:stretch;}
+  .gen-list li{list-style:none; display:flex; align-items:center; gap:8px; opacity:.4; animation:litUp .3s ease forwards;}
+  .gen-list li:nth-child(1){animation-delay:.15s;} .gen-list li:nth-child(2){animation-delay:.9s;} .gen-list li:nth-child(3){animation-delay:1.6s;}
+  @keyframes litUp{to{opacity:1;}}
+  .gen-list .dot{width:6px; height:6px; border-radius:50%; background:var(--accent); flex:none;}
+
+  /* toast de celebración */
+  .toast{position:fixed; left:20px; right:20px; bottom:96px; z-index:50; display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid color-mix(in oklab, var(--accent) 30%, transparent); border-radius:var(--radius-card); padding:13px 15px; max-width:480px; margin:0 auto; box-shadow:0 20px 40px -14px rgba(0,0,0,.5); opacity:0; pointer-events:none; transform:translateY(24px); transition:transform .35s cubic-bezier(.2,.8,.2,1), opacity .35s ease;}
+  .toast.show{opacity:1; transform:translateY(0); pointer-events:auto;}
+  .toast svg{color:var(--accent); flex:none;}
+  .toast p{margin:0; font-size:12.5px; color:var(--text-1);}
+  .toast p b{color:var(--accent);}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">Clip<b>2</b>Post</div>
+  <div class="avatar" id="avatarBtn" title="Cuenta" role="button" tabindex="0">C</div>
+</div>
+
+<main>
+
+  <!-- ══════════ TAB: INICIO (M0 — el ritual diario) ══════════ -->
+  <section class="view active" id="view-inicio">
+    <h1>Hola, Carlos</h1>
+
+    <!-- pieza 1: el dato de hoy -->
+    <div class="stat-hero reveal d1">
+      <div class="label">Esta semana</div>
+      <div class="row">
+        <div class="num" id="statVideos">3<small>videos</small></div>
+        <div class="num" id="statPiezas">9<small>piezas</small></div>
+        <div class="num" id="statHoras">18h<small>ahorradas</small></div>
+      </div>
+      <div class="sub">vs. reescribir cada red a mano</div>
+    </div>
+
+    <!-- pieza 2: la acción de 1 tap -->
+    <button class="cta-new reveal d2" id="openModalBtn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+      Convertir un nuevo video
+    </button>
+
+    <!-- pieza 3+4 fusionadas: insight en voz del mecanismo + estado de racha (menos bloques apilados) -->
+    <div class="insight reveal d3">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/></svg>
+      <div>
+        <p><b>El Multiplicador de Voz</b> notó que tus posts de LinkedIn con una cifra en el título consiguen más comentarios — los últimos 2 los generó así a propósito.</p>
+        <div class="streak-row">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 2.6 6.9L22 9.3l-5.4 4.6 1.8 7.1L12 17l-6.4 4 1.8-7.1L2 9.3l7.4-.4Z"/></svg>
+          3 semanas seguidas publicando en tus 3 redes
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sec">Tus videos</h2>
+    <div class="vcard" onclick="openVideo('B2B')" role="button" tabindex="0" data-vid="B2B">
+      <div class="thumb"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+      <div class="meta"><b>Cómo cerrar clientes B2B</b><span>Hace 2 días · 3 piezas</span></div>
+      <span class="status listo">Listo</span>
+    </div>
+    <div class="vcard" onclick="openVideo('errores')" role="button" tabindex="0" data-vid="errores">
+      <div class="thumb"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+      <div class="meta"><b>3 errores al cotizar un proyecto</b><span>Hace 5 días · 3 piezas</span></div>
+      <span class="status listo">Listo</span>
+    </div>
+    <div class="vcard" onclick="openVideo('webinar')" role="button" tabindex="0" data-vid="webinar">
+      <div class="thumb"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+      <div class="meta"><b>Webinar de cierre Q3</b><span>Hace 1 semana · 3 piezas</span></div>
+      <span class="status listo">Listo</span>
+    </div>
+
+    <!-- ESTADO VACÍO (0 videos) — diseñado, se activa cuando la Sesión 6 conecte datos reales -->
+    <div class="empty-state hidden" id="emptyVideos">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+      <b>Todavía no convertiste ningún video</b>
+      <span>Sube tu primer video y en menos de un minuto tienes tus 3 piezas listas.</span>
+    </div>
+
+    <!-- ESTADO DE ERROR (video no procesable) — diseñado, se activa cuando la Sesión 6 conecte el backend real -->
+    <div class="error-state hidden" id="errorVideo">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F87171" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01"/></svg>
+      <div><b>No pudimos procesar este video</b><span>El archivo puede estar dañado o ser muy corto. Prueba con otro o pega el link directo.</span></div>
+    </div>
+  </section>
+
+  <!-- ══════════ TAB: PIEZAS (galería con filtro por red) ══════════ -->
+  <section class="view" id="view-piezas">
+    <h1>Tus piezas</h1>
+    <div class="video-filter-banner hidden" id="videoFilterBanner">
+      <span id="videoFilterLabel"></span>
+      <button id="clearVideoFilter">Ver todas</button>
+    </div>
+    <div class="chips-filter" id="chipsFilter">
+      <button class="chip-f on" data-net="todas">Todas</button>
+      <button class="chip-f" data-net="li">LinkedIn</button>
+      <button class="chip-f" data-net="x">X</button>
+      <button class="chip-f" data-net="ig">Instagram</button>
+    </div>
+    <div class="empty-state hidden" id="noPiecesMatch">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v4M16 2v4M3 9h18"/></svg>
+      <b>No hay piezas para este filtro</b>
+      <span>Prueba con otra red o quita el filtro de video.</span>
+    </div>
+
+    <div class="pcard" data-net="li" data-video="B2B">
+      <div class="head"><span class="net net-li">LinkedIn</span><button class="copy-btn" onclick="copyPiece(this)">Copiar</button></div>
+      <p class="src-tag">De: "Cómo cerrar clientes B2B"</p>
+      <p style="margin-top:6px;"><b>Perdí 6 horas</b> reescribiendo un solo video para 3 redes. Así que dejé de hacerlo a mano...</p>
+    </div>
+    <div class="pcard" data-net="x" data-video="B2B">
+      <div class="head"><span class="net net-x">Hilo de X</span><button class="copy-btn" onclick="copyPiece(this)">Copiar</button></div>
+      <p class="src-tag">De: "Cómo cerrar clientes B2B"</p>
+      <p style="margin-top:6px;">1/ <b>Nadie te dice esto</b> sobre reutilizar contenido en X: el hook va en el primer tweet...</p>
+    </div>
+    <div class="pcard" data-net="ig" data-video="B2B">
+      <div class="head"><span class="net net-ig">Carrusel IG</span><button class="copy-btn" onclick="copyPiece(this)">Copiar</button></div>
+      <p class="src-tag">De: "Cómo cerrar clientes B2B"</p>
+      <p style="margin-top:6px;">Slide 1 — <b>"El error que comete el 90% de los consultores"</b></p>
+    </div>
+    <div class="pcard" data-net="li" data-video="errores">
+      <div class="head"><span class="net net-li">LinkedIn</span><button class="copy-btn" onclick="copyPiece(this)">Copiar</button></div>
+      <p class="src-tag">De: "3 errores al cotizar un proyecto"</p>
+      <p style="margin-top:6px;"><b>Cotizar mal</b> te cuesta más que no cotizar. Estos son los 3 errores que veo repetirse...</p>
+    </div>
+    <div class="pcard" data-net="x" data-video="errores">
+      <div class="head"><span class="net net-x">Hilo de X</span><button class="copy-btn" onclick="copyPiece(this)">Copiar</button></div>
+      <p class="src-tag">De: "3 errores al cotizar un proyecto"</p>
+      <p style="margin-top:6px;">1/ <b>El error #1</b> no es cobrar poco — es no explicar por qué cobras eso...</p>
+    </div>
+    <div class="pcard" data-net="ig" data-video="errores">
+      <div class="head"><span class="net net-ig">Carrusel IG</span><button class="copy-btn" onclick="copyPiece(this)">Copiar</button></div>
+      <p class="src-tag">De: "3 errores al cotizar un proyecto"</p>
+      <p style="margin-top:6px;">Slide 1 — <b>"3 errores que te están costando clientes"</b></p>
+    </div>
+    <div class="pcard" data-net="li" data-video="webinar">
+      <div class="head"><span class="net net-li">LinkedIn</span><button class="copy-btn" onclick="copyPiece(this)">Copiar</button></div>
+      <p class="src-tag">De: "Webinar de cierre Q3"</p>
+      <p style="margin-top:6px;"><b>47 personas</b> se conectaron a mi webinar de cierre. Esto fue lo que más preguntaron...</p>
+    </div>
+    <div class="pcard" data-net="x" data-video="webinar">
+      <div class="head"><span class="net net-x">Hilo de X</span><button class="copy-btn" onclick="copyPiece(this)">Copiar</button></div>
+      <p class="src-tag">De: "Webinar de cierre Q3"</p>
+      <p style="margin-top:6px;">1/ <b>La pregunta que más se repitió</b> en mi webinar de cierre de Q3 fue esta...</p>
+    </div>
+    <div class="pcard" data-net="ig" data-video="webinar">
+      <div class="head"><span class="net net-ig">Carrusel IG</span><button class="copy-btn" onclick="copyPiece(this)">Copiar</button></div>
+      <p class="src-tag">De: "Webinar de cierre Q3"</p>
+      <p style="margin-top:6px;">Slide 1 — <b>"Lo que aprendí cerrando el Q3 con 12 clientes nuevos"</b></p>
+    </div>
+  </section>
+
+  <!-- ══════════ TAB: CUENTA ══════════ -->
+  <section class="view" id="view-cuenta">
+    <h1>Tu cuenta</h1>
+    <div class="plan-card">
+      <div class="l">Plan actual</div>
+      <h3>Anual — US$7.42/mes</h3>
+      <p>Se renueva el 14 de octubre de 2026</p>
+    </div>
+
+    <h2 class="sec">Ajustes</h2>
+    <div class="acc-row">
+      <span class="lbl"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>Correo</span>
+      <span class="val">carlos@consultora.com</span>
+    </div>
+    <div class="acc-row action" id="toneRow" role="button" tabindex="0">
+      <span class="lbl"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-11M12 6V3M20 21v-5M20 12V3"/><path d="M1 14h6M9 10h6M17 16h6"/></svg>Tono de las piezas</span>
+      <span class="val">Directo <span class="soon-badge">Próximamente</span></span>
+    </div>
+    <div class="acc-row action" id="billingRow" role="button" tabindex="0">
+      <span class="lbl"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.5 8.5 8 10 4.5-1.5 8-5 8-10V6l-8-4Z"/></svg>Facturación y plan</span>
+      <span class="val">Administrar <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-2px; margin-left:2px;"><path d="m9 18 6-6-6-6"/></svg></span>
+    </div>
+    <div class="acc-row" style="border-bottom:none;">
+      <span class="lbl"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2 2-2 3.5M12 17h.01"/></svg>Ayuda y soporte</span>
+      <span class="val">soporte@clip2post.com</span>
+    </div>
+
+    <button class="logout" id="logoutBtn">Cerrar sesión</button>
+  </section>
+
+</main>
+
+<!-- tab bar -->
+<nav class="tabbar">
+  <button class="on" data-view="inicio">
+    <span class="tab-chip"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg></span>
+    Inicio
+  </button>
+  <button data-view="piezas">
+    <span class="tab-chip"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v4M16 2v4M3 9h18"/></svg></span>
+    Piezas
+  </button>
+  <button data-view="cuenta">
+    <span class="tab-chip"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg></span>
+    Cuenta
+  </button>
+</nav>
+
+<!-- modal: nuevo video -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="grabber"></div>
+
+    <div id="uploadState">
+      <div class="mhead">
+        <h2>Convertir un nuevo video</h2>
+        <button class="close" id="closeModalBtn" aria-label="Cerrar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <label class="dropzone" for="modalFileInput">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+        <b id="modalDropText">Toca para elegir tu archivo</b>
+        <span>o pega un link abajo</span>
+        <input type="file" id="modalFileInput" accept="video/*,audio/*" style="position:absolute; width:1px; height:1px; opacity:0;">
+      </label>
+      <div class="mfield">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7.5-.5l-2 2a5 5 0 0 0 7 7l1-1"/></svg>
+        <input type="text" id="modalVideoUrl" placeholder="https://youtube.com/watch?v=...">
+      </div>
+      <p class="errmsg" id="modalErr">Pega un link o sube un archivo antes de generar tus piezas.</p>
+      <button class="cta-new" id="modalGenerateBtn">Generar mis 3 piezas</button>
+    </div>
+
+    <div class="gen-state" id="genState">
+      <div class="ring-wrap">
+        <svg width="96" height="96" viewBox="0 0 96 96">
+          <circle class="ring-bg" cx="48" cy="48" r="39" fill="none" stroke-width="7"/>
+          <circle class="ring-fg" cx="48" cy="48" r="39" fill="none" stroke-width="7"/>
+        </svg>
+      </div>
+      <h2 style="font-size:16px;">Creando tu contenido</h2>
+      <ul class="gen-list">
+        <li><span class="dot"></span>Transcribiendo tu video</li>
+        <li><span class="dot"></span>Leyendo el contexto completo</li>
+        <li><span class="dot"></span>Escribiendo con tu tono</li>
+      </ul>
+      <button id="cancelGenBtn" style="color:var(--text-2); background:none; border:none; font-size:12.5px; font-weight:600; cursor:pointer;">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- toast de celebración (M3-ligero) -->
+<div class="toast" id="celebToast">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 2.6 6.9L22 9.3l-5.4 4.6 1.8 7.1L12 17l-6.4 4 1.8-7.1L2 9.3l7.4-.4Z"/></svg>
+  <p id="celebToastText">¡Video nuevo listo!</p>
+</div>
+
+<script>
+  // ── Navegación por pestañas ──
+  var views = document.querySelectorAll('.view');
+  var tabs = document.querySelectorAll('.tabbar button');
+  tabs.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      tabs.forEach(function(b){ b.classList.remove('on'); });
+      btn.classList.add('on');
+      views.forEach(function(v){ v.classList.toggle('active', v.id === 'view-' + btn.dataset.view); });
+      window.scrollTo(0,0);
+    });
+  });
+  var avatarBtn = document.getElementById('avatarBtn');
+  avatarBtn.addEventListener('click', function(){
+    tabs.forEach(function(b){ b.classList.toggle('on', b.dataset.view === 'cuenta'); });
+    views.forEach(function(v){ v.classList.toggle('active', v.id === 'view-cuenta'); });
+  });
+  avatarBtn.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.click(); }
+  });
+
+  // ── Teclado en las tarjetas de video (mismo patrón que .acc-row.action) ──
+  document.querySelectorAll('.vcard[data-vid]').forEach(function(card){
+    card.addEventListener('keydown', function(e){
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openVideo(card.dataset.vid); }
+    });
+  });
+
+  var VIDEO_TITLES = { 'B2B': 'Cómo cerrar clientes B2B', 'errores': '3 errores al cotizar un proyecto', 'webinar': 'Webinar de cierre Q3' };
+  var currentVideoFilter = null;
+  var currentNetFilter = 'todas';
+  try { currentNetFilter = localStorage.getItem('c2p_ultimaRed') || 'todas'; } catch(e){}
+
+  function applyPieceFilters(){
+    var visible = 0;
+    document.querySelectorAll('.pcard').forEach(function(card){
+      var matchNet = (currentNetFilter === 'todas' || card.dataset.net === currentNetFilter);
+      var matchVideo = (!currentVideoFilter || card.dataset.video === currentVideoFilter);
+      var show = matchNet && matchVideo;
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    document.getElementById('noPiecesMatch').classList.toggle('hidden', visible > 0);
+  }
+
+  function openVideo(id){
+    currentVideoFilter = id;
+    var banner = document.getElementById('videoFilterBanner');
+    document.getElementById('videoFilterLabel').textContent = 'Mostrando: ' + (VIDEO_TITLES[id] || id);
+    banner.classList.remove('hidden');
+    tabs.forEach(function(b){ b.classList.toggle('on', b.dataset.view === 'piezas'); });
+    views.forEach(function(v){ v.classList.toggle('active', v.id === 'view-piezas'); });
+    applyPieceFilters();
+    window.scrollTo(0,0);
+  }
+  document.getElementById('clearVideoFilter').addEventListener('click', function(){
+    currentVideoFilter = null;
+    document.getElementById('videoFilterBanner').classList.add('hidden');
+    applyPieceFilters();
+  });
+
+  // ── Filtro de piezas por red (recuerda la última elegida) ──
+  document.querySelectorAll('.chip-f').forEach(function(chip){
+    if (chip.dataset.net === currentNetFilter) {
+      document.querySelectorAll('.chip-f').forEach(function(c){ c.classList.remove('on'); });
+      chip.classList.add('on');
+    }
+    chip.addEventListener('click', function(){
+      document.querySelectorAll('.chip-f').forEach(function(c){ c.classList.remove('on'); });
+      chip.classList.add('on');
+      currentNetFilter = chip.dataset.net;
+      try { localStorage.setItem('c2p_ultimaRed', currentNetFilter); } catch(e){}
+      applyPieceFilters();
+    });
+  });
+  applyPieceFilters();
+
+  // ── Copiar pieza (feedback óptimo, sin doble-tap) ──
+  var COPY_LABEL = 'Copiar';
+  var COPIED_HTML = 'Copiado <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-1px; margin-left:3px;"><path d="M20 6 9 17l-5-5"/></svg>';
+  function copyPiece(btn){
+    if (btn.classList.contains('done')) return;
+    var text = btn.closest('.pcard').querySelector('p:last-of-type').innerText;
+    if (navigator.clipboard) { navigator.clipboard.writeText(text).catch(function(){}); }
+    btn.innerHTML = COPIED_HTML;
+    btn.classList.add('done');
+    setTimeout(function(){ btn.textContent = COPY_LABEL; btn.classList.remove('done'); }, 1800);
+  }
+
+  // ── Modal nuevo video ──
+  var overlay = document.getElementById('modalOverlay');
+  var uploadState = document.getElementById('uploadState');
+  var genState = document.getElementById('genState');
+  var genTimer = null;
+  function openModal(){
+    overlay.classList.add('show');
+    uploadState.classList.remove('hidden');
+    genState.classList.remove('show');
+  }
+  function closeModal(){ overlay.classList.remove('show'); }
+  function cancelGeneration(){
+    if (genTimer) { clearTimeout(genTimer); genTimer = null; }
+    genState.classList.remove('show');
+    uploadState.classList.remove('hidden');
+  }
+  document.getElementById('openModalBtn').addEventListener('click', openModal);
+  document.getElementById('closeModalBtn').addEventListener('click', function(){
+    if (genTimer) { cancelGeneration(); }
+    closeModal();
+  });
+  document.getElementById('cancelGenBtn').addEventListener('click', cancelGeneration);
+  overlay.addEventListener('click', function(e){ if (e.target === overlay && !genTimer) closeModal(); });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && overlay.classList.contains('show')) {
+      if (genTimer) { cancelGeneration(); } else { closeModal(); }
+    }
+  });
+
+  document.getElementById('modalFileInput').addEventListener('change', function(){
+    if (this.files && this.files[0]) document.getElementById('modalDropText').textContent = this.files[0].name;
+  });
+
+  var modalUrlInput = document.getElementById('modalVideoUrl');
+  var modalField = modalUrlInput.closest('.mfield');
+  var modalErrText = document.getElementById('modalErr');
+  function isValidVideoUrl(v){
+    try { var u = new URL(v); return u.protocol === 'http:' || u.protocol === 'https:'; }
+    catch(e) { return false; }
+  }
+  document.getElementById('modalGenerateBtn').addEventListener('click', function(){
+    var urlVal = modalUrlInput.value.trim();
+    var hasUrl = urlVal.length > 0;
+    var hasFile = document.getElementById('modalFileInput').files.length > 0;
+    if (!hasUrl && !hasFile) {
+      modalField.classList.add('err');
+      modalErrText.textContent = 'Pega un link o sube un archivo antes de generar tus piezas.';
+      modalErrText.classList.add('show');
+      modalUrlInput.focus();
+      return;
+    }
+    if (hasUrl && !hasFile && !isValidVideoUrl(urlVal)) {
+      modalField.classList.add('err');
+      modalErrText.textContent = 'Ese link no parece válido — pega la URL completa (con https://).';
+      modalErrText.classList.add('show');
+      modalUrlInput.focus();
+      return;
+    }
+    modalField.classList.remove('err');
+    modalErrText.classList.remove('show');
+    uploadState.classList.add('hidden');
+    genState.classList.add('show');
+    genTimer = setTimeout(function(){
+      genTimer = null;
+      closeModal();
+      // Actualiza el estado real (no un texto fijo) y lo refleja en el hero + el toast
+      var videosEl = document.getElementById('statVideos');
+      var piezasEl = document.getElementById('statPiezas');
+      var newVideos = parseInt(videosEl.textContent, 10) + 1;
+      var newPiezas = parseInt(piezasEl.textContent, 10) + 3;
+      videosEl.childNodes[0].textContent = newVideos;
+      piezasEl.childNodes[0].textContent = newPiezas;
+      document.getElementById('celebToastText').innerHTML = '¡Video #' + newVideos + '! <b>' + newPiezas + ' piezas generadas</b> en total — sigues sin reescribir nada a mano.';
+      var toast = document.getElementById('celebToast');
+      toast.classList.add('show');
+      setTimeout(function(){ toast.classList.remove('show'); }, 3600);
+    }, 2400);
+  });
+
+  // ── Conteo animado de los números héroe (movimiento baseline #2, respeta reduced-motion) ──
+  var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!prefersReduced) {
+    document.querySelectorAll('.stat-hero .num').forEach(function(el){
+      var text = el.childNodes[0].textContent;
+      var match = text.match(/\d+/);
+      if (!match) return;
+      var target = parseInt(match[0], 10);
+      var suffix = text.slice(match.index + match[0].length);
+      var start = 0, dur = 800, t0 = null;
+      function step(ts){
+        if (!t0) t0 = ts;
+        var p = Math.min(1, (ts - t0) / dur);
+        var val = Math.round(start + (target - start) * (1 - Math.pow(1 - p, 3)));
+        el.childNodes[0].textContent = val + suffix;
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  }
+
+  // ── Acciones de Cuenta ──
+  document.getElementById('logoutBtn').addEventListener('click', function(){
+    if (window.confirm('¿Cerrar tu sesión de Clip2Post?')) {
+      window.location.href = 'login.html';
+    }
+  });
+  function showInfoToast(msg){
+    document.getElementById('celebToastText').textContent = msg;
+    var toast = document.getElementById('celebToast');
+    toast.classList.add('show');
+    setTimeout(function(){ toast.classList.remove('show'); }, 3200);
+  }
+  document.getElementById('billingRow').addEventListener('click', function(){
+    showInfoToast('La facturación se administra desde Hotmart — se conecta en la Sesión 6.');
+  });
+  document.getElementById('billingRow').addEventListener('keydown', function(e){
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.click(); }
+  });
+  document.getElementById('toneRow').addEventListener('click', function(){
+    showInfoToast('Elige entre Directo, Educativo o Provocador — se conecta en la Sesión 6.');
+  });
+  document.getElementById('toneRow').addEventListener('keydown', function(e){
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.click(); }
+  });
+</script>
+
+</body>
+</html>

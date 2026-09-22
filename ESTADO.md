@@ -1,7 +1,7 @@
 # ESTADO — Clip2Post
-Última actualización: 2026-09-22 | Sesión actual: 4
+Última actualización: 2026-09-22 | Sesión actual: 5
 
-⏸️ CHECKPOINT — Última acción completada: Sesión 4 completa — onboarding.html (4 pasos: segmentación, pegar video, generando, resultado+paywall-teaser), paywall.html (narrativa de 7 preguntas) y login.html (passwordless: magic link + OTP + Google) construidos y verificados por revisor-visual: onboarding LISTA (38/40, 20/20), paywall LISTA (37/40, 19/20, copy 17/20), login LISTA (38/40, 19/20) — veredictos en docs/revisiones/*-veredicto.md / Siguiente acción exacta: Mostrar el funnel completo al usuario, pedir aprobación, y avanzar a Sesión 5 (app interna).
+⏸️ CHECKPOINT — Última acción completada: Sesión 5 completa — app.html (app interna: Inicio/M0 con dato de la semana + CTA de 1 tap + insight en voz del mecanismo, Piezas con filtro por red y por video, Cuenta) construida y verificada por revisor-visual (7 pasadas) — VEREDICTO LISTA: Usabilidad 36/40, Craft 18/20 (ver docs/revisiones/app-veredicto.md) / Siguiente acción exacta: responder el feedback externo del usuario sobre el paywall (compartió un análisis de Gemini) y, tras su aprobación, avanzar a Sesión 6 (integraciones reales y seguridad).
 
 ## Qué es esta app (3 líneas máximo)
 Plataforma web que convierte un video/podcast largo en publicaciones listas para LinkedIn, hilo de X y estructura de carrusel de Instagram, con el tono de cada red. Usuario: consultores B2B, coaches y creadores independientes que graban contenido pero no tienen tiempo de adaptarlo a cada plataforma. Monetización: suscripción mensual/anual.
@@ -52,8 +52,17 @@ Plataforma web que convierte un video/podcast largo en publicaciones listas para
 - Unit economics (gate 40): costo de IA por generación (transcripción + LLM para 3 piezas de texto) estimado muy por debajo del techo de 20% del precio (~US$2.60) — gate pasado en venta directa; revisar de nuevo con datos reales de uso en Sesión 6.
 
 ## Secuencia maestra de construcción (NO saltar)
-- Estado de la secuencia: Landing ✅ · Onboarding ✅ · Paywall ✅ · Login ✅ — falta App interna (Sesión 5)
+- Estado de la secuencia: Landing ✅ · Onboarding ✅ · Paywall ✅ · Login ✅ · App interna ✅ — falta Servicios externos (Sesión 6)
 - Ruta aprobada: `/` → `/onboarding` → `/paywall` → `/login` → `/app`
+- App interna: `app.html` — 3 secciones (Inicio/Piezas/Cuenta) con tab bar, modal de nuevo video con validación real + estado de generación cancelable, filtro combinado por red y por video en Piezas, estados vacío/error diseñados (pendientes de activar con datos reales), loop de retención documentado abajo
+
+## Loop de retención (Regla de Oro #6 — activo, documentado en Sesión 5)
+- Gatillo: abre la app para ver su semana / recuerda que tiene un video sin convertir
+- Acción: toca "Convertir un nuevo video" (1 tap) → pega link o sube archivo
+- Recompensa: ve sus 3 piezas listas en <3s (simulado) + celebración con el conteo actualizado
+- Inversión: el video queda en su biblioteca (Piezas), el contador semanal crece (horas ahorradas acumuladas) — "si borro tu historial, la app de mañana es idéntica" = NO, el dato de "esta semana" y el insight en voz del mecanismo cambian con cada video nuevo
+- M0 (ritual diario, pantalla Inicio): dato de la semana → CTA de 1 tap → estado de racha → insight en voz de "El Multiplicador de Voz" (blueprint de 56)
+- Primera semana D1-D7: pendiente de diseñar en detalle en Sesión 6 junto con notificaciones (requiere backend real)
 
 ## Decisiones técnicas (NO re-discutir sin pedirlo el usuario)
 - Framework: Next.js (App Router) — default del stack pineado del SO (51), necesario por SEO de la landing de venta.
@@ -66,17 +75,20 @@ Plataforma web que convierte un video/podcast largo en publicaciones listas para
 - Sesión 2 — Identidad visual: dirección A "Estudio Confiable" (naranja sobre carbón-marrón) aprobada, FICHA-ARTE.md cerrada — 2026-09-22
 - Sesión 3 — Página de ventas: FICHA-AVATAR.md, mecanismo "El Multiplicador de Voz" bautizado, landing.html con 10 secciones + elementos visuales, revisor-visual LISTA (36/40·18/20·19/20) — 2026-09-22
 - Sesión 4 — Onboarding (4 pasos), paywall (narrativa de 7 preguntas) y login (passwordless) construidos, los 3 verificados LISTA por revisor-visual — 2026-09-22
+- Sesión 5 — App interna (Inicio/Piezas/Cuenta), loop de retención documentado, revisor-visual LISTA (36/40·18/20) tras 7 rondas de pulido — 2026-09-22
 
 ## Sesión en progreso 🔧
-(ninguna — Sesión 4 cerrada, pendiente aprobación del usuario para arrancar Sesión 5)
+(ninguna — Sesión 5 cerrada, pendiente aprobación del usuario para arrancar Sesión 6)
 
 ## Próximas sesiones 📋
-- Sesión 5: App interna (3-5 secciones, protagonista por sección, momentos emocionales del loop)
 - Sesión 6: Integraciones reales y seguridad (Supabase, IA real, Hotmart, dominio)
+- Sesión 7: Testing, animaciones, pulido y rigor de entrega
 
 ## Problemas conocidos ⚠️
-- [direcciones-abc / landing] Sección 5 de la landing ("La app por dentro") usa un mini-demo HTML honesto del mecanismo, no screenshots reales — pendiente reemplazar por capturas reales de la app cuando se construya en Sesión 5 (regla de flujo de trabajo del 19)
+- [direcciones-abc / landing] Sección 5 de la landing ("La app por dentro") usa un mini-demo HTML honesto del mecanismo, no screenshots reales — pendiente reemplazar por capturas reales de la app (ya construida en app.html) cuando haya backend en Sesión 6
 - [docs/copy] Footer legal de landing.html tiene enlaces placeholder a Términos/Privacidad/Contacto — el contenido real de esas páginas se redacta con 47-LEGAL-FISCAL-Y-PRIVACIDAD.md, pendiente
+- [app] Los estados vacío (`#emptyVideos`) y de error (`#errorVideo`) de app.html están diseñados y estilizados pero no wireados a condiciones reales (siguen con clase `.hidden`) — se activan con datos reales de Supabase en Sesión 6
+- [app] "Tono de las piezas" y "Facturación y plan" en Cuenta muestran un toast "se conecta en la Sesión 6" — son placeholders honestos, no funciones rotas
 
 ## Pendientes del usuario (acciones que el usuario debe hacer)
 (ninguno todavía — se le avisará cuando lleguemos a cuentas/servicios externos)
