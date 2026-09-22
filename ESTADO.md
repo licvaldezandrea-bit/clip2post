@@ -1,7 +1,7 @@
 # ESTADO — Clip2Post
 Última actualización: 2026-09-22 | Sesión actual: 3
 
-⏸️ CHECKPOINT — Última acción completada: FICHA-ARTE.md y FICHA-AVATAR.md cerradas y aprobadas; landing.html construida (10 secciones canónicas, mecanismo "El Multiplicador de Voz" bautizado) y verificada por screenshot / Siguiente acción exacta: Mostrar la landing al usuario, pedir aprobación, y avanzar a Sesión 4 (onboarding, paywall y login) si aprueba.
+⏸️ CHECKPOINT — Última acción completada: landing.html revisada por revisor-visual independiente (5 pasadas) — VEREDICTO LISTA: Usabilidad 37/40, Craft 18/20, Copy 19/20 (ver docs/revisiones/landing-veredicto.md) / Siguiente acción exacta: Mostrar la landing al usuario, pedir aprobación, y avanzar a Sesión 4 (onboarding, paywall y login) si aprueba.
 
 ## Qué es esta app (3 líneas máximo)
 Plataforma web que convierte un video/podcast largo en publicaciones listas para LinkedIn, hilo de X y estructura de carrusel de Instagram, con el tono de cada red. Usuario: consultores B2B, coaches y creadores independientes que graban contenido pero no tienen tiempo de adaptarlo a cada plataforma. Monetización: suscripción mensual/anual.
@@ -34,7 +34,7 @@ Plataforma web que convierte un video/podcast largo en publicaciones listas para
 - Objeción principal: "¿va a sonar a robot?" / "¿ya pago ChatGPT, para qué esto?"
 - Mecanismo bautizado: "El Multiplicador de Voz" (aparece en hero, sección solución y oferta de la landing)
 - Big Idea: "No dejas de publicar por pereza — dejas de publicar porque cada red exige reescribir todo de nuevo. El Multiplicador de Voz toma tu video una sola vez y lo convierte en post de LinkedIn + hilo de X + carrusel IG, sonando como tú."
-- Landing: `landing.html` en la raíz — 10 secciones canónicas construidas, carrusel de sección 5 con mini-demo honesto (marcado como vista previa del mecanismo, no screenshots reales — se reemplaza en Sesión 5) · sin testimonios (aún no hay 3 reales) · screenshot: `docs/revisiones/landing-full.png`
+- Landing: `landing.html` en la raíz — 10 secciones canónicas construidas, carrusel de sección 5 con mini-demo honesto (marcado como vista previa del mecanismo, no screenshots reales — se reemplaza en Sesión 5) · sin testimonios (aún no hay 3 reales) · revisión independiente: LISTA (37/40 · 18/20 · 19/20) — ver `docs/revisiones/landing-veredicto.md` y screenshots `docs/revisiones/landing-375*.png`
 
 ## MVP — funciones núcleo
 1. Importar video/audio o pegar enlace/transcripción
