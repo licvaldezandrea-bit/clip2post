@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clip2Post — Tu video, convertido en 3 posts en 60 segundos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#1a140d; --surface:#241c13; --hundido:#120d08;
+    --text-1:#f5efe6; --text-2:#b0a392; --line: rgba(245,239,230,.09);
+    --accent:#ff7a33; --accent-2:#e8b354;
+    --radius-card:16px; --radius-btn:999px;
+    --font-display:'Switzer',sans-serif; --font-body:'Switzer',sans-serif;
+    --shadow-tinta: 74 34 8;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0; background:var(--bg); color:var(--text-1); font-family:var(--font-body); -webkit-font-smoothing:antialiased; line-height:1.5;}
+  img,svg{display:block;}
+  .wrap{max-width:1120px; margin:0 auto; padding-inline:24px;}
+  section{padding-block:88px;}
+  h1,h2,h3{font-family:var(--font-display); letter-spacing:-0.015em; text-wrap:balance; margin:0;}
+  .kicker{font-size:12px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--accent);}
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    height:54px; padding:0 28px; border-radius:var(--radius-btn); font-weight:700; font-size:15.5px;
+    color:var(--bg); text-decoration:none; border:none; cursor:pointer;
+    background:linear-gradient(180deg, color-mix(in oklab, var(--accent) 86%, white), var(--accent));
+    box-shadow:inset 0 1px 0 rgb(255 255 255 / .3), 0 14px 30px -10px color-mix(in oklab, var(--accent) 55%, transparent);
+  }
+  .btn.ghost{background:transparent; color:var(--text-1); box-shadow:none; border:1px solid var(--line); height:46px; padding:0 20px; font-size:14px;}
+  .icon{width:22px; height:22px; flex:none;}
+
+  /* header */
+  header.nav{position:sticky; top:0; z-index:20; backdrop-filter:blur(10px);
+    background:color-mix(in oklab, var(--bg) 82%, transparent); border-bottom:1px solid var(--line);}
+  header.nav .row{display:flex; align-items:center; justify-content:space-between; height:66px;}
+  .brand{font-weight:800; font-size:17px; letter-spacing:-0.01em;}
+  .brand b{color:var(--accent);}
+  .nav a.entrar{color:var(--text-2); text-decoration:none; font-size:14px; font-weight:600;}
+
+  /* HERO */
+  .hero{padding-top:64px; padding-bottom:0;}
+  .hero-grid{display:grid; grid-template-columns:1.05fr 0.95fr; gap:56px; align-items:center;}
+  .hero h1{font-size:clamp(32px,4.4vw,48px); font-weight:800; line-height:1.08; margin-top:14px;}
+  .hero h1 em{font-style:normal; color:var(--accent);}
+  .hero .sub{margin-top:18px; font-size:17px; color:var(--text-2); max-width:52ch; line-height:1.55;}
+  .hero .sub b{color:var(--text-1); font-weight:600;}
+  .hero .ctarow{margin-top:28px; display:flex; align-items:center; gap:16px; flex-wrap:wrap;}
+  .prueba{margin-top:18px; display:flex; align-items:center; gap:10px; font-size:13px; color:var(--text-2);}
+  .prueba .badge{display:inline-flex; align-items:center; gap:6px; background:color-mix(in oklab, var(--accent) 12%, transparent);
+    border:1px solid color-mix(in oklab, var(--accent) 30%, transparent); color:var(--accent); font-weight:700;
+    padding:5px 12px; border-radius:999px; font-size:12px;}
+  .hero-visual{position:relative;}
+  .hero-visual .glow{position:absolute; inset:-40px; background:radial-gradient(closest-side, color-mix(in oklab, var(--accent) 20%, transparent), transparent); filter:blur(30px); z-index:0;}
+  .device{
+    position:relative; z-index:1; background:var(--surface); border-radius:22px; padding:18px;
+    border:1px solid transparent;
+    background-image:linear-gradient(var(--surface),var(--surface)), linear-gradient(135deg, color-mix(in oklab, var(--accent) 40%, transparent), transparent 60%);
+    background-origin:border-box; background-clip:padding-box, border-box;
+    box-shadow:0 30px 70px -20px rgb(var(--shadow-tinta) / .45);
+  }
+  .device .tag{font-size:11px; color:var(--text-2); font-weight:600; margin-bottom:12px; display:flex; align-items:center; gap:8px;}
+  .device .tag .dot{width:7px; height:7px; border-radius:50%; background:var(--accent);}
+  .device .src{display:flex; gap:10px; align-items:center; background:var(--hundido); border-radius:12px; padding:11px 12px; margin-bottom:12px;}
+  .device .src .thumb{width:38px; height:38px; border-radius:8px; background:linear-gradient(155deg, color-mix(in oklab, var(--accent) 45%, var(--surface)), var(--hundido)); flex:none;}
+  .device .src .meta{font-size:11px; color:var(--text-2); line-height:1.4;}
+  .device .src .meta b{color:var(--text-1); display:block; font-size:12.5px;}
+  .device .card{background:var(--hundido); border:1px solid var(--line); border-radius:12px; padding:12px 13px; margin-bottom:10px;}
+  .device .card .head{display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;}
+  .device .card .net{font-size:10px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--accent);}
+  .device .card .copy{font-size:9.5px; font-weight:700; color:var(--bg); background:var(--text-1); padding:3px 9px; border-radius:999px;}
+  .device .card p{margin:0; font-size:11.5px; color:var(--text-2); line-height:1.5;}
+  .device .card p b{color:var(--text-1);}
+
+  /* PROBLEMA */
+  .problema h2{font-size:clamp(26px,3vw,34px); font-weight:800; max-width:20ch;}
+  .qgrid{margin-top:40px; display:grid; grid-template-columns:repeat(2,1fr); gap:16px;}
+  .qcard{display:flex; gap:14px; align-items:flex-start; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-card); padding:20px;}
+  .qcard .ic{width:38px; height:38px; border-radius:10px; background:color-mix(in oklab, var(--accent) 12%, transparent); display:flex; align-items:center; justify-content:center; flex:none;}
+  .qcard p{margin:0; font-size:15px; color:var(--text-1); line-height:1.5;}
+
+  /* AGITACION */
+  .agitacion{background:var(--surface); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .agit-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:36px;}
+  .agit-stat{background:var(--hundido); border-radius:var(--radius-card); padding:26px; border:1px solid var(--line);}
+  .agit-stat .num{font-family:var(--font-display); font-size:36px; font-weight:800; color:var(--accent); font-variant-numeric:tabular-nums;}
+  .agit-stat p{margin-top:8px; font-size:13.5px; color:var(--text-2); line-height:1.5;}
+  .agit-quote{margin-top:32px; font-size:17px; color:var(--text-1); font-style:italic; border-left:3px solid var(--accent); padding-left:18px; max-width:60ch;}
+
+  /* SOLUCION */
+  .bigidea{max-width:62ch; margin-top:18px; font-size:16.5px; color:var(--text-2); line-height:1.6;}
+  .bigidea b{color:var(--text-1);}
+  .mech-name{display:inline-flex; align-items:center; gap:8px; margin-top:26px; background:color-mix(in oklab, var(--accent) 12%, transparent);
+    border:1px solid color-mix(in oklab, var(--accent) 30%, transparent); color:var(--accent); font-weight:800; font-size:13px;
+    padding:8px 16px; border-radius:999px; letter-spacing:.01em;}
+  .steps{margin-top:32px; display:grid; grid-template-columns:repeat(3,1fr); gap:18px;}
+  .step{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-card); padding:22px;}
+  .step .chip{width:32px; height:32px; border-radius:9px; background:var(--accent); color:var(--bg); font-weight:800; font-size:14px; display:flex; align-items:center; justify-content:center; margin-bottom:14px;}
+  .step h4{font-size:15.5px; font-weight:700; margin-bottom:6px;}
+  .step p{margin:0; font-size:13.5px; color:var(--text-2); line-height:1.5;}
+  .avsd{margin-top:40px; display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+  .avsd .box{border-radius:var(--radius-card); padding:22px; border:1px solid var(--line);}
+  .avsd .antes{background:var(--hundido);}
+  .avsd .despues{background:color-mix(in oklab, var(--accent) 10%, var(--surface)); border-color:color-mix(in oklab, var(--accent) 30%, transparent);}
+  .avsd .label{font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--text-2);}
+  .avsd .despues .label{color:var(--accent);}
+  .avsd .big{font-family:var(--font-display); font-size:26px; font-weight:800; margin-top:8px;}
+  .avsd p.d{margin-top:6px; font-size:13px; color:var(--text-2);}
+
+  /* CARRUSEL */
+  .carrusel-wrap{margin-top:40px; position:relative;}
+  .carrusel{display:flex; gap:18px; overflow-x:auto; scroll-snap-type:x mandatory; padding-bottom:14px; scrollbar-width:none;}
+  .carrusel::-webkit-scrollbar{display:none;}
+  .slide{scroll-snap-align:start; flex:0 0 auto; width:260px;}
+  .slide .telefono{width:260px; aspect-ratio:9/17.5; background:var(--surface); border:8px solid #0d0a06; border-radius:34px; padding:8px; box-shadow:0 20px 44px -18px rgb(var(--shadow-tinta) / .5);}
+  .slide .screen{width:100%; height:100%; border-radius:26px; background:var(--bg); overflow:hidden; padding:16px 14px; display:flex; flex-direction:column; gap:10px;}
+  .slide .cap{margin-top:12px; font-size:13px; font-weight:700; color:var(--text-1);}
+  .slide .cap span{display:block; font-size:11.5px; font-weight:500; color:var(--text-2); margin-top:2px;}
+  .dots{display:flex; gap:6px; justify-content:center; margin-top:18px;}
+  .dots span{width:6px; height:6px; border-radius:50%; background:var(--line);}
+  .dots span:first-child{background:var(--accent); width:18px; border-radius:999px;}
+  .carrusel-nota{margin-top:14px; text-align:center; font-size:12px; color:var(--text-2);}
+
+  /* OFERTA */
+  .oferta{background:var(--surface); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .stack{margin-top:30px; background:var(--hundido); border:1px solid var(--line); border-radius:var(--radius-card); padding:24px; max-width:560px;}
+  .stack .row{display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--line); font-size:14px;}
+  .stack .row:last-of-type{border-bottom:none;}
+  .stack .row .val{color:var(--text-2);}
+  .stack .total{display:flex; justify-content:space-between; margin-top:14px; padding-top:14px; border-top:1px dashed var(--line); font-weight:700; font-size:15px;}
+  .stack .total .real{color:var(--accent);}
+  .planes{margin-top:36px; display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+  .plan{background:var(--hundido); border:1px solid var(--line); border-radius:var(--radius-card); padding:26px; position:relative;}
+  .plan.rec{border-color:transparent; background-image:linear-gradient(var(--hundido),var(--hundido)), linear-gradient(135deg, var(--accent), transparent 65%); background-origin:border-box; background-clip:padding-box, border-box;}
+  .plan .badge{position:absolute; top:-12px; right:20px; background:var(--accent-2); color:#1a140d; font-size:11px; font-weight:800; padding:5px 12px; border-radius:999px;}
+  .plan .trial{font-size:11px; font-weight:700; color:var(--accent); letter-spacing:.03em; text-transform:uppercase;}
+  .plan .price{font-family:var(--font-display); font-size:34px; font-weight:800; margin-top:8px;}
+  .plan .price span{font-size:15px; font-weight:600; color:var(--text-2);}
+  .plan .note{font-size:12px; color:var(--text-2); margin-top:2px;}
+  .plan ul{list-style:none; margin:18px 0 0; padding:0; display:flex; flex-direction:column; gap:10px;}
+  .plan li{display:flex; gap:8px; align-items:flex-start; font-size:13.5px; color:var(--text-1);}
+  .plan .btn{width:100%; margin-top:20px;}
+
+  /* GARANTIA */
+  .garantia-box{margin-top:32px; display:flex; gap:22px; align-items:flex-start; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-card); padding:28px; max-width:760px;}
+  .garantia-box .shield{width:52px; height:52px; border-radius:14px; background:color-mix(in oklab, var(--accent) 14%, transparent); display:flex; align-items:center; justify-content:center; flex:none;}
+  .garantia-box h3{font-size:19px; font-weight:800;}
+  .garantia-box p{margin-top:8px; font-size:14.5px; color:var(--text-2); line-height:1.6;}
+
+  /* FAQ */
+  .faq{max-width:760px; margin-top:34px;}
+  .qa{border-bottom:1px solid var(--line); padding:18px 0;}
+  .qa summary{cursor:pointer; list-style:none; display:flex; justify-content:space-between; align-items:center; font-weight:700; font-size:15.5px;}
+  .qa summary::-webkit-details-marker{display:none;}
+  .qa summary .chev{transition:transform .2s;}
+  .qa[open] summary .chev{transform:rotate(180deg);}
+  .qa p{margin:12px 0 0; font-size:14px; color:var(--text-2); line-height:1.6;}
+
+  /* CTA FINAL */
+  .cta-final{text-align:center; background:radial-gradient(1000px 400px at 50% -10%, color-mix(in oklab, var(--accent) 18%, transparent), transparent), var(--surface); border-top:1px solid var(--line);}
+  .cta-final h2{font-size:clamp(26px,3.4vw,38px); font-weight:800; max-width:22ch; margin:0 auto;}
+  .cta-final .sub{margin:16px auto 0; max-width:52ch; font-size:15.5px; color:var(--text-2);}
+  .cta-final .btn{margin-top:26px;}
+  .ps{margin:22px auto 0; max-width:52ch; font-size:12.5px; color:var(--text-2); border-top:1px solid var(--line); padding-top:16px;}
+
+  /* FOOTER */
+  footer.legal{padding-block:44px; border-top:1px solid var(--line);}
+  footer.legal .row{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;}
+  footer.legal nav{display:flex; gap:20px; flex-wrap:wrap;}
+  footer.legal a{color:var(--text-2); text-decoration:none; font-size:12.5px;}
+  footer.legal .c{font-size:12px; color:var(--text-2);}
+
+  @media (max-width:860px){
+    .hero-grid{grid-template-columns:1fr;}
+    .qgrid, .agit-grid, .steps, .avsd, .planes{grid-template-columns:1fr;}
+    section{padding-block:56px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap row">
+    <div class="brand">Clip<b>2</b>Post</div>
+    <a class="entrar" href="#">Entrar</a>
+  </div>
+</header>
+
+<!-- 1. HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="kicker">Para consultores y creadores B2B</span>
+      <h1>Tu video, convertido en <em>3 posts en 60 segundos.</em></h1>
+      <p class="sub"><b>El Multiplicador de Voz</b> lee tu video y escribe el post de LinkedIn, el hilo de X y el carrusel de Instagram — sonando 100% como tú, nunca como un bot.</p>
+      <div class="ctarow">
+        <a class="btn" href="#oferta">Probar mi primer video gratis</a>
+        <a class="btn ghost" href="#mecanismo">Ver cómo funciona</a>
+      </div>
+      <div class="prueba">
+        <span class="badge">Garantía de 7 días · Hotmart</span>
+        <span>Sin tarjeta para empezar</span>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="glow"></div>
+      <div class="device">
+        <div class="tag"><span class="dot"></span>Generado hace 12 segundos</div>
+        <div class="src">
+          <div class="thumb"></div>
+          <div class="meta"><b>Cómo cerrar clientes B2B</b>14:32 · procesado</div>
+        </div>
+        <div class="card">
+          <div class="head"><span class="net">LinkedIn</span><span class="copy">Copiar</span></div>
+          <p><b>Perdí 6 horas</b> reescribiendo un solo video para 3 redes. Así que dejé de hacerlo a mano...</p>
+        </div>
+        <div class="card">
+          <div class="head"><span class="net">Hilo de X</span><span class="copy">Copiar</span></div>
+          <p>1/ <b>Nadie te dice esto</b> sobre reutilizar contenido en X: el hook va en el primer tweet.</p>
+        </div>
+        <div class="card" style="margin-bottom:0">
+          <div class="head"><span class="net">Carrusel IG</span><span class="copy">Copiar</span></div>
+          <p>Slide 1 — <b>"El error que comete el 90% de los consultores"</b></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. PROBLEMA -->
+<section class="problema">
+  <div class="wrap">
+    <span class="kicker">¿Te suena familiar?</span>
+    <h2 style="margin-top:10px;">Si grabas contenido, esto probablemente te está pasando</h2>
+    <div class="qgrid">
+      <div class="qcard">
+        <span class="ic"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#ff7a33" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+        <p>¿Grabaste un video buenísimo... y todavía sigue sin convertirse en un solo post de LinkedIn?</p>
+      </div>
+      <div class="qcard">
+        <span class="ic"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#ff7a33" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M14 3v5h5"/></svg></span>
+        <p>¿Sientes que reescribir cada red te quita más tiempo que crear el contenido en sí?</p>
+      </div>
+      <div class="qcard">
+        <span class="ic"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#ff7a33" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M2 14h2M20 14h2M9 13v2M15 13v2"/></svg></span>
+        <p>¿Le pediste ayuda a ChatGPT y el texto te salió sonando a bot corporativo sin alma?</p>
+      </div>
+      <div class="qcard">
+        <span class="ic"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#ff7a33" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span>
+        <p>¿Te da parálisis de hoja en blanco cuando intentas convertir tu video en texto?</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. AGITACION -->
+<section class="agitacion">
+  <div class="wrap">
+    <span class="kicker">El costo real de seguir igual</span>
+    <h2 style="margin-top:10px; font-size:clamp(24px,3vw,32px); font-weight:800; max-width:26ch;">No es falta de disciplina — es que reescribir a mano no escala</h2>
+    <div class="agit-grid">
+      <div class="agit-stat"><div class="num">16–32h</div><p>perdidas cada mes reescribiendo el mismo video para 3 redes distintas</p></div>
+      <div class="agit-stat"><div class="num">200–380h</div><p>al año — semanas enteras de tu vida que no vuelven</p></div>
+      <div class="agit-stat"><div class="num">$3K–10K</div><p>en clientes que se van con la competencia que sí publica seguido</p></div>
+    </div>
+    <p class="agit-quote">"Siento la culpa constante de no estar publicando en LinkedIn mientras mi competencia menos preparada se lleva a mis clientes."</p>
+  </div>
+</section>
+
+<!-- 4. SOLUCION -->
+<section id="mecanismo">
+  <div class="wrap">
+    <span class="kicker">No es tu culpa</span>
+    <h2 style="margin-top:10px; font-size:clamp(26px,3vw,34px); font-weight:800; max-width:24ch;">No dejas de publicar por pereza — dejas de publicar porque cada red exige reescribir todo de nuevo</h2>
+    <p class="bigidea">Y por eso construimos <b>el Multiplicador de Voz</b>: toma tu video una sola vez y lo convierte en el post de LinkedIn, el hilo de X y el carrusel de Instagram — sonando exactamente como tú, no como una IA genérica.</p>
+    <span class="mech-name">
+      <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff7a33" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/></svg>
+      El Multiplicador de Voz
+    </span>
+    <div class="steps">
+      <div class="step"><div class="chip">1</div><h4>Pega tu video o un link</h4><p>YouTube, Zoom, Drive o el archivo directo. Sin configurar nada.</p></div>
+      <div class="step"><div class="chip">2</div><h4>Lee el contexto completo</h4><p>No solo corta clips como otras herramientas — entiende lo que realmente dijiste.</p></div>
+      <div class="step"><div class="chip">3</div><h4>Recibes tus 3 piezas</h4><p>Post de LinkedIn, hilo de X y carrusel de Instagram, listos para copiar — con tu tono.</p></div>
+    </div>
+    <div class="avsd">
+      <div class="box antes"><p class="label">Antes</p><p class="big">6 horas</p><p class="d">reescribiendo un video para 3 redes, con texto que a veces suena a bot</p></div>
+      <div class="box despues"><p class="label">Con Clip2Post</p><p class="big">60 segundos</p><p class="d">y las 3 piezas listas, con tu tono — tú solo revisas y publicas</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. LA APP POR DENTRO -->
+<section>
+  <div class="wrap">
+    <span class="kicker">Así se ve por dentro</span>
+    <h2 style="margin-top:10px; font-size:clamp(26px,3vw,34px); font-weight:800;">Tu video, en tres pantallas</h2>
+    <div class="carrusel-wrap">
+      <div class="carrusel">
+        <div class="slide">
+          <div class="telefono"><div class="screen">
+            <div style="font-size:10px;color:var(--text-2);font-weight:600;">PASO 1 DE 1</div>
+            <div style="font-family:var(--font-display);font-size:16px;font-weight:700;margin-top:4px;">Pega tu video o súbelo</div>
+            <div style="flex:1;border:1.5px dashed rgba(255,122,51,.35);border-radius:12px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:11px;color:var(--text-2);padding:14px;margin-top:10px;">Arrastra tu archivo o pega un link</div>
+          </div></div>
+          <p class="cap">Un solo paso<span>Sin cuestionarios largos</span></p>
+        </div>
+        <div class="slide">
+          <div class="telefono"><div class="screen">
+            <div style="font-size:10px;color:var(--text-2);font-weight:600;">TIEMPO AHORRADO HOY</div>
+            <div style="font-family:var(--font-display);font-size:30px;font-weight:800;margin-top:4px;">6 <small style="font-size:13px;font-weight:600;color:var(--text-2);">horas</small></div>
+            <div class="card" style="margin-top:10px;"><div class="head"><span class="net">LinkedIn</span><span class="copy">Copiar</span></div><p><b>Perdí 6 horas</b> reescribiendo un video para 3 redes...</p></div>
+            <div class="card"><div class="head"><span class="net">Hilo de X</span><span class="copy">Copiar</span></div><p>1/ <b>Nadie te dice esto</b>...</p></div>
+          </div></div>
+          <p class="cap">Tu contenido, listo<span>3 piezas de un solo video</span></p>
+        </div>
+        <div class="slide">
+          <div class="telefono"><div class="screen">
+            <div style="font-size:10px;color:var(--text-2);font-weight:600;">DESBLOQUEA MÁS</div>
+            <div style="font-family:var(--font-display);font-size:16px;font-weight:700;margin-top:4px;">Sigue publicando sin límite</div>
+            <div class="card" style="margin-top:12px;"><div class="head"><span class="net">$89/año</span><span class="copy">7 días gratis</span></div><p>= $7.42/mes · ahorras 43%</p></div>
+          </div></div>
+          <p class="cap">Sin límite de videos<span>Cuando ya viste tu primer resultado</span></p>
+        </div>
+      </div>
+      <div class="dots"><span></span><span></span><span></span></div>
+      <p class="carrusel-nota">Vista previa del mecanismo real de Clip2Post, construida sobre la identidad visual ya aprobada — las capturas finales de la app se montan aquí al cerrar la Sesión 5.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 6. OFERTA -->
+<section class="oferta" id="oferta">
+  <div class="wrap">
+    <span class="kicker">Lo que desbloqueas</span>
+    <h2 style="margin-top:10px; font-size:clamp(26px,3vw,34px); font-weight:800;">Todo lo que necesitas para no volver a reescribir un video</h2>
+    <div class="stack">
+      <div class="row"><span>El Multiplicador de Voz — videos ilimitados</span><span class="val">$49/mes</span></div>
+      <div class="row"><span>Selector de tono por pieza</span><span class="val">$19/mes</span></div>
+      <div class="row"><span>Exportación sin marca de agua</span><span class="val">$15/mes</span></div>
+      <div class="row"><span>Historial de piezas generadas</span><span class="val">$9/mes</span></div>
+      <div class="total"><span>Valor total</span><span class="real">$92/mes</span></div>
+    </div>
+    <div class="planes">
+      <div class="plan rec">
+        <span class="badge">5 meses gratis</span>
+        <p class="trial">7 días gratis</p>
+        <p class="price">$7.42<span>/mes</span></p>
+        <p class="note">Se cobra $89.00/año</p>
+        <ul>
+          <li>✓ Videos ilimitados</li>
+          <li>✓ Tono personalizado</li>
+          <li>✓ Sin marca de agua</li>
+          <li>✓ Historial completo</li>
+        </ul>
+        <a class="btn" href="#">Empezar prueba gratis</a>
+      </div>
+      <div class="plan">
+        <p class="trial">7 días gratis</p>
+        <p class="price">$12.99<span>/mes</span></p>
+        <p class="note">Facturado mes a mes</p>
+        <ul>
+          <li>✓ Videos ilimitados</li>
+          <li>✓ Tono personalizado</li>
+          <li>✓ Sin marca de agua</li>
+          <li>✓ Historial completo</li>
+        </ul>
+        <a class="btn ghost" style="width:100%;" href="#">Empezar prueba gratis</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. GARANTIA -->
+<section>
+  <div class="wrap">
+    <span class="kicker">Cero riesgo</span>
+    <h2 style="margin-top:10px; font-size:clamp(24px,3vw,30px); font-weight:800;">La Garantía del Primer Post</h2>
+    <div class="garantia-box">
+      <span class="shield"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#ff7a33" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.5 8.5 8 10 4.5-1.5 8-5 8-10V6l-8-4Z"/><path d="m9 12 2 2 4-4"/></svg></span>
+      <div>
+        <h3>Si tu primer resultado no suena a ti, te devolvemos todo</h3>
+        <p>Prueba Clip2Post con tu propio video. Si en los primeros 7 días sientes que el resultado no representa tu voz, escríbenos — sin preguntas, sin formularios — y te devolvemos el 100% de tu pago. Es la garantía de 7 días de Hotmart, verificable directamente por ti.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8. FAQ -->
+<section>
+  <div class="wrap">
+    <span class="kicker">Preguntas frecuentes</span>
+    <h2 style="margin-top:10px; font-size:clamp(24px,3vw,30px); font-weight:800;">Antes de que lo preguntes</h2>
+    <div class="faq">
+      <details class="qa" open>
+        <summary>¿Necesito saber de tecnología para usarlo?<svg class="chev icon" viewBox="0 0 24 24" fill="none" stroke="#b0a392" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <p>No. Pegas un link o subes tu video, y en menos de un minuto tienes tus 3 piezas. No hay paneles que configurar ni prompts que escribir.</p>
+      </details>
+      <details class="qa">
+        <summary>¿El texto va a sonar a robot?<svg class="chev icon" viewBox="0 0 24 24" fill="none" stroke="#b0a392" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <p>No: Clip2Post lee tu video real, no un prompt genérico, y puedes elegir el tono (directo, educativo, provocador) para que suene a ti.</p>
+      </details>
+      <details class="qa">
+        <summary>Ya probé ChatGPT y OpusClip — ¿en qué es diferente?<svg class="chev icon" viewBox="0 0 24 24" fill="none" stroke="#b0a392" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <p>OpusClip solo corta video, no escribe texto. ChatGPT necesita que tú redactes el prompt correcto cada vez. Clip2Post hace las dos cosas por ti, a partir de tu video real.</p>
+      </details>
+      <details class="qa">
+        <summary>¿Vale la pena pagar por esto?<svg class="chev icon" viewBox="0 0 24 24" fill="none" stroke="#b0a392" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <p>Una agencia de repurposing cobra desde $500/mes. Clip2Post te cuesta menos de $0.50 al día — y no depende de que alguien más te entregue a tiempo.</p>
+      </details>
+      <details class="qa">
+        <summary>¿Es seguro pagar aquí?<svg class="chev icon" viewBox="0 0 24 24" fill="none" stroke="#b0a392" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <p>El pago lo procesa Hotmart, con garantía de devolución de 7 días verificable directamente en tu compra.</p>
+      </details>
+      <details class="qa">
+        <summary>¿Va a publicar automáticamente en mis redes?<svg class="chev icon" viewBox="0 0 24 24" fill="none" stroke="#b0a392" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <p>Nunca. Clip2Post nunca publica por ti — tú revisas, copias y pegas cada pieza cuando y donde quieras.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- 9. CTA FINAL -->
+<section class="cta-final">
+  <div class="wrap">
+    <h2>Imagina cerrar la laptop a las 7pm sabiendo que ya publicaste en tus 3 redes</h2>
+    <p class="sub">Sin haber escrito una sola palabra de más. Esa es la diferencia entre perseguir contenido y tener un sistema — la diferencia entre un consultor más y el que su nicho reconoce.</p>
+    <a class="btn" href="#oferta">Probar mi primer video gratis</a>
+    <p class="ps">PD: Tu competencia menos preparada sigue publicando mientras tú lees esto. El Multiplicador de Voz está a un video de distancia — empieza gratis, cancela cuando quieras.</p>
+  </div>
+</section>
+
+<!-- 10. FOOTER LEGAL -->
+<footer class="legal">
+  <div class="wrap row">
+    <div class="brand" style="font-size:14px;">Clip<b>2</b>Post</div>
+    <nav>
+      <a href="#">Términos de uso</a>
+      <a href="#">Política de privacidad</a>
+      <a href="#">Contacto y soporte</a>
+    </nav>
+    <span class="c">© 2026 Clip2Post. Todos los derechos reservados.</span>
+  </div>
+</footer>
+
+</body>
+</html>

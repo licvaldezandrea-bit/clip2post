@@ -1,7 +1,7 @@
 # ESTADO — Clip2Post
-Última actualización: 2026-09-22 | Sesión actual: 2
+Última actualización: 2026-09-22 | Sesión actual: 3
 
-⏸️ CHECKPOINT — Última acción completada: direcciones-abc.html y vista-previa-app.html reconstruidos desde el kit oficial (data-kit="abc-v2"), con el ajuste de color pedido por el usuario (naranja sobre carbón-marrón cálido en vez de índigo sobre negro) / Siguiente acción exacta: Pedir confirmación final del tour (vista-previa-app.html) y cerrar FICHA-ARTE.md, luego seguir con paleta completa/tokens CSS y mapa de rutas de la Sesión 2.
+⏸️ CHECKPOINT — Última acción completada: FICHA-ARTE.md y FICHA-AVATAR.md cerradas y aprobadas; landing.html construida (10 secciones canónicas, mecanismo "El Multiplicador de Voz" bautizado) y verificada por screenshot / Siguiente acción exacta: Mostrar la landing al usuario, pedir aprobación, y avanzar a Sesión 4 (onboarding, paywall y login) si aprueba.
 
 ## Qué es esta app (3 líneas máximo)
 Plataforma web que convierte un video/podcast largo en publicaciones listas para LinkedIn, hilo de X y estructura de carrusel de Instagram, con el tono de cada red. Usuario: consultores B2B, coaches y creadores independientes que graban contenido pero no tienen tiempo de adaptarlo a cada plataforma. Monetización: suscripción mensual/anual.
@@ -26,13 +26,15 @@ Plataforma web que convierte un video/podcast largo en publicaciones listas para
 - REGISTRO ANTI-REPETICIÓN (29/54): paleta naranja-sobre-carbón-cálido + par tipográfico Switzer/Switzer quedan VETADOS para el próximo proyecto del SO. Dirección del banco 54: N/A (dispositivo propio, justificado en la ficha)
 - Entregables en el repo: `direcciones-abc.html` + `vista-previa-app.html` (raíz, construidos desde el kit oficial `plantillas-codigo/direcciones-abc/plantilla.html`) · screenshots en `docs/revisiones/`
 
-## Avatar (de la ficha ya investigada — FICHA-AVATAR.md se redacta en Sesión 3)
-- Nombre: Carlos, 34 años, consultor B2B / creador independiente de alto valor
+## Avatar y venta (Sesión 1/3 — NO cambiar sin validar)
+- FICHA-AVATAR.md: existe y aprobada — 2026-09-22 (Carlos, 34 años, consultor B2B / creador independiente de alto valor)
 - Dolor #1: pierde 4-8h/semana adaptando un video a texto para cada red; termina publicando "basura robótica" o no publica
 - Deseo #1: pegar un link y tener el post de LinkedIn + hilo de X + carrusel IG listos en 60 segundos, sonando 100% como él
 - Nivel de consciencia: 4/5 (consciente de la solución, escéptico de la calidad de la IA)
 - Objeción principal: "¿va a sonar a robot?" / "¿ya pago ChatGPT, para qué esto?"
-- Ángulo ganador: "Tu trabajo pesado terminó en cuanto diste 'detener' a la grabación."
+- Mecanismo bautizado: "El Multiplicador de Voz" (aparece en hero, sección solución y oferta de la landing)
+- Big Idea: "No dejas de publicar por pereza — dejas de publicar porque cada red exige reescribir todo de nuevo. El Multiplicador de Voz toma tu video una sola vez y lo convierte en post de LinkedIn + hilo de X + carrusel IG, sonando como tú."
+- Landing: `landing.html` en la raíz — 10 secciones canónicas construidas, carrusel de sección 5 con mini-demo honesto (marcado como vista previa del mecanismo, no screenshots reales — se reemplaza en Sesión 5) · sin testimonios (aún no hay 3 reales) · screenshot: `docs/revisiones/landing-full.png`
 
 ## MVP — funciones núcleo
 1. Importar video/audio o pegar enlace/transcripción
@@ -70,7 +72,8 @@ Plataforma web que convierte un video/podcast largo en publicaciones listas para
 - Sesión 4: Onboarding, paywall y login
 
 ## Problemas conocidos ⚠️
-(ninguno)
+- [direcciones-abc / landing] Sección 5 de la landing ("La app por dentro") usa un mini-demo HTML honesto del mecanismo, no screenshots reales — pendiente reemplazar por capturas reales de la app cuando se construya en Sesión 5 (regla de flujo de trabajo del 19)
+- [docs/copy] Footer legal de landing.html tiene enlaces placeholder a Términos/Privacidad/Contacto — el contenido real de esas páginas se redacta con 47-LEGAL-FISCAL-Y-PRIVACIDAD.md, pendiente
 
 ## Pendientes del usuario (acciones que el usuario debe hacer)
 (ninguno todavía — se le avisará cuando lleguemos a cuentas/servicios externos)
