@@ -1,7 +1,7 @@
 # ESTADO — Clip2Post
-Última actualización: 2026-09-22 | Sesión actual: 3
+Última actualización: 2026-09-22 | Sesión actual: 4
 
-⏸️ CHECKPOINT — Última acción completada: se agregaron elementos visuales a pedido del usuario (íconos en Agitación, diagrama de flujo "video→LinkedIn/X/Instagram" en Solución, íconos en Antes/Después) + pulido de detalle; landing.html re-verificada por revisor-visual (6 pasadas) — VEREDICTO LISTA: Usabilidad 36/40, Craft 18/20, Copy 19/20 (ver docs/revisiones/landing-veredicto.md) / Siguiente acción exacta: Mostrar la landing al usuario, pedir aprobación, y avanzar a Sesión 4 (onboarding, paywall y login) si aprueba.
+⏸️ CHECKPOINT — Última acción completada: Sesión 4 completa — onboarding.html (4 pasos: segmentación, pegar video, generando, resultado+paywall-teaser), paywall.html (narrativa de 7 preguntas) y login.html (passwordless: magic link + OTP + Google) construidos y verificados por revisor-visual: onboarding LISTA (38/40, 20/20), paywall LISTA (37/40, 19/20, copy 17/20), login LISTA (38/40, 19/20) — veredictos en docs/revisiones/*-veredicto.md / Siguiente acción exacta: Mostrar el funnel completo al usuario, pedir aprobación, y avanzar a Sesión 5 (app interna).
 
 ## Qué es esta app (3 líneas máximo)
 Plataforma web que convierte un video/podcast largo en publicaciones listas para LinkedIn, hilo de X y estructura de carrusel de Instagram, con el tono de cada red. Usuario: consultores B2B, coaches y creadores independientes que graban contenido pero no tienen tiempo de adaptarlo a cada plataforma. Monetización: suscripción mensual/anual.
@@ -52,7 +52,7 @@ Plataforma web que convierte un video/podcast largo en publicaciones listas para
 - Unit economics (gate 40): costo de IA por generación (transcripción + LLM para 3 piezas de texto) estimado muy por debajo del techo de 20% del precio (~US$2.60) — gate pasado en venta directa; revisar de nuevo con datos reales de uso en Sesión 6.
 
 ## Secuencia maestra de construcción (NO saltar)
-- Estado de la secuencia: Sesión 2 (identidad visual) en curso — dirección elegida, cerrando ficha
+- Estado de la secuencia: Landing ✅ · Onboarding ✅ · Paywall ✅ · Login ✅ — falta App interna (Sesión 5)
 - Ruta aprobada: `/` → `/onboarding` → `/paywall` → `/login` → `/app`
 
 ## Decisiones técnicas (NO re-discutir sin pedirlo el usuario)
@@ -62,14 +62,17 @@ Plataforma web que convierte un video/podcast largo en publicaciones listas para
 - Qué NUNCA debe hacer la app: nunca publicar/auto-postear en redes sin permiso explícito del usuario · nunca inventar datos o citas que no estén en el video original · nunca compartir el contenido o transcripción del usuario con terceros · nunca presionar con culpa para retener (sin dark patterns de cancelación).
 
 ## Sesiones completadas ✅
-- Sesión 1 — Validación (ya hecha por el usuario), FICHA-MODELO.md (OpusClip), Constitución del Producto, monetización y stack decididos — 2026-09-22
+- Sesión 1 — Validación, FICHA-MODELO.md (OpusClip), Constitución, monetización y stack — 2026-09-22
+- Sesión 2 — Identidad visual: dirección A "Estudio Confiable" (naranja sobre carbón-marrón) aprobada, FICHA-ARTE.md cerrada — 2026-09-22
+- Sesión 3 — Página de ventas: FICHA-AVATAR.md, mecanismo "El Multiplicador de Voz" bautizado, landing.html con 10 secciones + elementos visuales, revisor-visual LISTA (36/40·18/20·19/20) — 2026-09-22
+- Sesión 4 — Onboarding (4 pasos), paywall (narrativa de 7 preguntas) y login (passwordless) construidos, los 3 verificados LISTA por revisor-visual — 2026-09-22
 
 ## Sesión en progreso 🔧
-- Sesión 2 — Identidad visual: pregunta de referencia (eligió "propóngamelo tú") → 3 direcciones A/B/C → usuario eligió A → FICHA-ARTE.md creada → tour de la app (4 pantallas) publicado, pendiente de confirmación final del usuario
+(ninguna — Sesión 4 cerrada, pendiente aprobación del usuario para arrancar Sesión 5)
 
 ## Próximas sesiones 📋
-- Sesión 3: Página de ventas (landing con las 10 secciones canónicas)
-- Sesión 4: Onboarding, paywall y login
+- Sesión 5: App interna (3-5 secciones, protagonista por sección, momentos emocionales del loop)
+- Sesión 6: Integraciones reales y seguridad (Supabase, IA real, Hotmart, dominio)
 
 ## Problemas conocidos ⚠️
 - [direcciones-abc / landing] Sección 5 de la landing ("La app por dentro") usa un mini-demo HTML honesto del mecanismo, no screenshots reales — pendiente reemplazar por capturas reales de la app cuando se construya en Sesión 5 (regla de flujo de trabajo del 19)
@@ -79,5 +82,7 @@ Plataforma web que convierte un video/podcast largo en publicaciones listas para
 (ninguno todavía — se le avisará cuando lleguemos a cuentas/servicios externos)
 
 ## Notas para la próxima sesión
-- El documento fuente completo está en D:\Desktop\CHAT GPT\CLIP2POST.docx — incluye mapa de empatía completo (10 dolores, 10 deseos, lenguaje literal del cliente) útil para el copy de venta en Sesión 3.
+- El documento fuente completo está en D:\Desktop\CHAT GPT\CLIP2POST.docx — incluye mapa de empatía completo (10 dolores, 10 deseos, lenguaje literal del cliente).
 - Nombre definitivo: Clip2Post (confirmado por el usuario).
+- Moneda: todos los precios del proyecto van en USD ($12.99/mes · $89.00/año · $7.42/mes mostrado) — confirmado explícitamente por el usuario, no cambiar a moneda local sin pedirlo él.
+- Prototipo estático (sin backend aún): landing.html → onboarding.html → paywall.html → login.html están enlazados entre sí y usan un video de ejemplo consistente ("Cómo cerrar clientes B2B") — la conexión real de datos entre pantallas llega en Sesión 6 con Supabase.
