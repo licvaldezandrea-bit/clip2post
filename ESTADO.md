@@ -1,7 +1,7 @@
 # ESTADO — Clip2Post
-Última actualización: 2026-09-22 | Sesión actual: 1
+Última actualización: 2026-09-22 | Sesión actual: 2
 
-⏸️ CHECKPOINT — Última acción completada: Usuario aprobó los 3 mini-acuerdos de negocio (monetización, precio, límites de la app) / Siguiente acción exacta: Presentar Plan Maestro (B5) y esperar aprobación para arrancar Sesión 2 (identidad visual).
+⏸️ CHECKPOINT — Última acción completada: Tour de la app (4 pantallas) publicado y dirección de arte A aprobada por el usuario / Siguiente acción exacta: Pedir confirmación final del tour (vista-previa-app.html) y cerrar FICHA-ARTE.md, luego seguir con paleta completa/tokens CSS y mapa de rutas de la Sesión 2.
 
 ## Qué es esta app (3 líneas máximo)
 Plataforma web que convierte un video/podcast largo en publicaciones listas para LinkedIn, hilo de X y estructura de carrusel de Instagram, con el tono de cada red. Usuario: consultores B2B, coaches y creadores independientes que graban contenido pero no tienen tiempo de adaptarlo a cada plataforma. Monetización: suscripción mensual/anual.
@@ -16,7 +16,17 @@ Plataforma web que convierte un video/podcast largo en publicaciones listas para
 - Brecha: baja saturación en "conversión inteligente de contexto a texto optimizado por red" (vs alta saturación en recorte de video)
 - Precio de referencia del mercado: US$29-99/mes (competencia) — nuestro precio propuesto: US$12.99/mes o US$89/año
 
-## Avatar (de la ficha ya investigada — FICHA-AVATAR.md se redacta en breve)
+## Dirección de Arte (Sesión 2 — NO cambiar sin justificación)
+> La ficha COMPLETA vive en `FICHA-ARTE.md` en la raíz. Aquí solo el resumen + registro anti-repetición.
+- FICHA-ARTE.md: existe — dirección elegida por el usuario: SÍ (opción A) — 2026-09-22. Cierre final pendiente de confirmar el tour.
+- ¿Hubo referencia visual del usuario?: NO → fusión de líderes (OpusClip + Linear), Protocolo A/B/C
+- Resumen: fondo #0C0D10 · superficie #15161B · acento #8B8FF5 (índigo) · 2ª nota #E8B354 (ámbar) · Display "Switzer" · Body "Switzer" · radio 12px (cards) / 999px (pills)
+- Personalidad: confiable · eficiente · autoritativa (sin ser fría)
+- Dispositivo ownable: tags de color por red social (LinkedIn/X/Instagram) junto a cada pieza generada
+- REGISTRO ANTI-REPETICIÓN (29/54): paleta índigo-sobre-negro-tintado + par tipográfico Switzer/Switzer quedan VETADOS para el próximo proyecto del SO. Dirección del banco 54: N/A (dispositivo propio, justificado en la ficha)
+- Artifacts: [3 direcciones A/B/C](https://claude.ai/artifact/VJaaiQ5gyftZjEfjn5qhmA) · [Tour de la app](https://claude.ai/artifact/VYJ33yEf9o8ZWwqshDygzX)
+
+## Avatar (de la ficha ya investigada — FICHA-AVATAR.md se redacta en Sesión 3)
 - Nombre: Carlos, 34 años, consultor B2B / creador independiente de alto valor
 - Dolor #1: pierde 4-8h/semana adaptando un video a texto para cada red; termina publicando "basura robótica" o no publica
 - Deseo #1: pegar un link y tener el post de LinkedIn + hilo de X + carrusel IG listos en 60 segundos, sonando 100% como él
@@ -24,7 +34,7 @@ Plataforma web que convierte un video/podcast largo en publicaciones listas para
 - Objeción principal: "¿va a sonar a robot?" / "¿ya pago ChatGPT, para qué esto?"
 - Ángulo ganador: "Tu trabajo pesado terminó en cuanto diste 'detener' a la grabación."
 
-## MVP — funciones núcleo (de la investigación, a confirmar en B3)
+## MVP — funciones núcleo
 1. Importar video/audio o pegar enlace/transcripción
 2. Generador de post de LinkedIn con hook + CTA
 3. Generador de hilo de X (separado por tweets)
@@ -40,24 +50,24 @@ Plataforma web que convierte un video/podcast largo en publicaciones listas para
 - Unit economics (gate 40): costo de IA por generación (transcripción + LLM para 3 piezas de texto) estimado muy por debajo del techo de 20% del precio (~US$2.60) — gate pasado en venta directa; revisar de nuevo con datos reales de uso en Sesión 6.
 
 ## Secuencia maestra de construcción (NO saltar)
-- Estado de la secuencia: Constitución del producto en curso (B3)
+- Estado de la secuencia: Sesión 2 (identidad visual) en curso — dirección elegida, cerrando ficha
 - Ruta aprobada: `/` → `/onboarding` → `/paywall` → `/login` → `/app`
 
 ## Decisiones técnicas (NO re-discutir sin pedirlo el usuario)
 - Framework: Next.js (App Router) — default del stack pineado del SO (51), necesario por SEO de la landing de venta.
 - Base de datos/Auth: Supabase (Postgres + RLS + Auth con email/Google).
 - Stack de IA: transcripción voz→texto (Whisper/AssemblyAI) + LLM (Claude) para generar los 3 formatos de texto — procesamiento ASÍNCRONO (el video tarda en transcribirse; se muestra estado "generando..." con progreso, nunca un spinner ciego). Corre por servidor/BFF, nunca la clave en el cliente.
-- Qué NUNCA debe hacer la app (derivado de la promesa, confirmar con el usuario): nunca publicar/auto-postear en redes sin permiso explícito del usuario · nunca inventar datos o citas que no estén en el video original · nunca compartir el contenido o transcripción del usuario con terceros · nunca presionar con culpa para retener (sin dark patterns de cancelación).
+- Qué NUNCA debe hacer la app: nunca publicar/auto-postear en redes sin permiso explícito del usuario · nunca inventar datos o citas que no estén en el video original · nunca compartir el contenido o transcripción del usuario con terceros · nunca presionar con culpa para retener (sin dark patterns de cancelación).
 
 ## Sesiones completadas ✅
-(ninguna aún)
+- Sesión 1 — Validación (ya hecha por el usuario), FICHA-MODELO.md (OpusClip), Constitución del Producto, monetización y stack decididos — 2026-09-22
 
 ## Sesión en progreso 🔧
-- Sesión 1 — Validación (ya hecha por el usuario) ✅ · FICHA-MODELO.md (OpusClip) ✅ · Constitución del Producto (B3) en curso — esperando nombre de app
+- Sesión 2 — Identidad visual: pregunta de referencia (eligió "propóngamelo tú") → 3 direcciones A/B/C → usuario eligió A → FICHA-ARTE.md creada → tour de la app (4 pantallas) publicado, pendiente de confirmación final del usuario
 
 ## Próximas sesiones 📋
-- Sesión 1: Constitución, AVATAR formal, monetización, arquitectura
-- Sesión 2: Identidad visual
+- Sesión 3: Página de ventas (landing con las 10 secciones canónicas)
+- Sesión 4: Onboarding, paywall y login
 
 ## Problemas conocidos ⚠️
 (ninguno)
@@ -67,4 +77,4 @@ Plataforma web que convierte un video/podcast largo en publicaciones listas para
 
 ## Notas para la próxima sesión
 - El documento fuente completo está en D:\Desktop\CHAT GPT\CLIP2POST.docx — incluye mapa de empatía completo (10 dolores, 10 deseos, lenguaje literal del cliente) útil para el copy de venta en Sesión 3.
-- Nombre: el usuario lo llama "Clip2Post" en el docx; el resumen final propone "ContentFlip" como principal. Confirmar nombre definitivo con el usuario.
+- Nombre definitivo: Clip2Post (confirmado por el usuario).
