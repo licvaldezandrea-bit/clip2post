@@ -32,18 +32,22 @@ Plataforma web que convierte un video/podcast largo en publicaciones listas para
 5. Copiar en 1 clic
 - NO construir todavía: auto-posting a redes, editor de video pesado, panel de analíticas multiusuario
 
-## Estrategia de monetización (propuesta, a confirmar)
-- Modelo: por decidir en B3 (Hard paywall vs Onboarding-first — matriz 02C)
-- Precio propuesto: US$12.99/mes | US$89/año — a validar contra gate de unit economics (40)
-- Trial: 7 días o 2 créditos de proyecto, sin tarjeta (según investigación previa)
+## Estrategia de monetización (Sesión 1 — NO cambiar sin validar)
+- Modelo: Onboarding-first (Modelo 2, categoría "IA Creativa/Contenido" de 02C) — 1ª generación (preview) gratis → paywall para desbloquear exportar/copiar y generar más.
+- Justificación: Clip2Post es una app de IA creativa — el usuario no quiere "aprender la herramienta", quiere ver el resultado ya. Cobrar antes de mostrar un resultado mata la conversión en este nicho (igual que hace OpusClip: paywall DESPUÉS del primer resultado).
+- Precio: US$12.99/mes | US$89/año (dentro del rango de competencia $15-99, más agresivo para ganar mercado LATAM)
+- Trial: 7 días sin tarjeta (aha inmediato: primer resultado en <2 min, no necesita trial largo)
+- Unit economics (gate 40): costo de IA por generación (transcripción + LLM para 3 piezas de texto) estimado muy por debajo del techo de 20% del precio (~US$2.60) — gate pasado en venta directa; revisar de nuevo con datos reales de uso en Sesión 6.
 
 ## Secuencia maestra de construcción (NO saltar)
 - Estado de la secuencia: Constitución del producto en curso (B3)
 - Ruta aprobada: `/` → `/onboarding` → `/paywall` → `/login` → `/app`
 
 ## Decisiones técnicas (NO re-discutir sin pedirlo el usuario)
-- Framework: por decidir (Sesión 1, regla del stack en 51-STACK-PINEADO.md)
-- Stack de IA: requiere transcripción voz→texto + LLM para generación de copy — decisión sync/async en Sesión 1 (30-INTEGRACION-IA.md)
+- Framework: Next.js (App Router) — default del stack pineado del SO (51), necesario por SEO de la landing de venta.
+- Base de datos/Auth: Supabase (Postgres + RLS + Auth con email/Google).
+- Stack de IA: transcripción voz→texto (Whisper/AssemblyAI) + LLM (Claude) para generar los 3 formatos de texto — procesamiento ASÍNCRONO (el video tarda en transcribirse; se muestra estado "generando..." con progreso, nunca un spinner ciego). Corre por servidor/BFF, nunca la clave en el cliente.
+- Qué NUNCA debe hacer la app (derivado de la promesa, confirmar con el usuario): nunca publicar/auto-postear en redes sin permiso explícito del usuario · nunca inventar datos o citas que no estén en el video original · nunca compartir el contenido o transcripción del usuario con terceros · nunca presionar con culpa para retener (sin dark patterns de cancelación).
 
 ## Sesiones completadas ✅
 (ninguna aún)
