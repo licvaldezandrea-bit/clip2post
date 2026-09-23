@@ -42,4 +42,9 @@
 - Registro anti-repetición: paleta índigo-sobre-negro-tintado + par tipográfico Switzer/Switzer quedan VETADOS para el próximo proyecto de este SO
 - Modo (claro/oscuro) DERIVADO por: los 2 líderes principales del nicho exacto (OpusClip, Linear) usan oscuro tintado — coherente con "herramienta seria para mostrar a clientes"
 
+## Isotipo (provisto por el usuario — 2026-09-23)
+- Origen: imagen entregada por el usuario (play + flecha de reenvío, plato redondeado) — recortada a su contenido real (de 1254×1254 con márgenes transparentes a 1008×1008 centrado) y exportada en `assets/isotipo.png` (512px, master) + `assets/favicon-32.png` + `assets/favicon-64.png` + `assets/apple-touch-icon.png` (180px)
+- Colores verificados contra el brand kit: plato #1E140E (≈ igual a --bg #1A140D) · trazo #FD7932 (≈ igual a --accent #FF7A33) — no requirió recoloreo, ya nace on-brand
+- Aplicado como favicon + apple-touch-icon en landing.html, onboarding.html, paywall.html, login.html y app.html, y junto al wordmark "Clip2Post" en el `.brand` de cada pantalla (excepto onboarding, cuyo topbar es solo barra de progreso)
+
 ## Idioma UI: Español latino neutro · Fecha de cierre de la ficha: 2026-09-22 · Aprobada por el usuario: SÍ (opción A + ajuste de color a naranja, tour aprobado con "me encanta") — FICHA CERRADA

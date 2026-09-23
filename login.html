@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Clip2Post — Entrar</title>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
@@ -34,7 +37,8 @@
   .back{width:34px; height:34px; border-radius:50%; background:var(--surface); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; color:var(--text-2); text-decoration:none;}
 
   main{flex:1; display:flex; flex-direction:column; justify-content:center; max-width:420px; margin:0 auto; padding:0 24px 40px; width:100%;}
-  .brand{font-weight:800; font-size:20px; text-align:center;}
+  .brand{display:flex; align-items:center; justify-content:center; gap:9px; font-weight:800; font-size:20px; text-align:center;}
+  .brand img{width:30px; height:30px; border-radius:8px; flex:none;}
   .brand b{color:var(--accent);}
   h1{font-family:var(--font-display); font-size:23px; font-weight:800; text-align:center; margin:22px 0 0; letter-spacing:-0.01em;}
   .sub{text-align:center; margin-top:8px; font-size:14px; color:var(--text-2); line-height:1.55;}
@@ -94,7 +98,7 @@
 </div>
 
 <main>
-  <div class="brand reveal d1">Clip<b>2</b>Post</div>
+  <div class="brand reveal d1"><img src="assets/isotipo.png" alt="" width="30" height="30">Clip<b>2</b>Post</div>
 
   <div id="formWrap" class="form-wrap">
     <h1 class="reveal d2">Entra con tu correo</h1>

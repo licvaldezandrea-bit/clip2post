@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Clip2Post — Tu video, convertido en 3 posts en 60 segundos</title>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta property="og:image" content="assets/isotipo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
@@ -55,7 +59,8 @@
   header.nav{position:sticky; top:0; z-index:20; backdrop-filter:blur(10px);
     background:color-mix(in oklab, var(--bg) 82%, transparent); border-bottom:1px solid var(--line);}
   header.nav .row{display:flex; align-items:center; justify-content:space-between; height:66px;}
-  .brand{font-weight:800; font-size:17px; letter-spacing:-0.01em;}
+  .brand{display:flex; align-items:center; gap:8px; font-weight:800; font-size:17px; letter-spacing:-0.01em;}
+  .brand img{width:24px; height:24px; border-radius:7px; flex:none;}
   .brand b{color:var(--accent);}
   .nav a.entrar{color:var(--text-2); text-decoration:none; font-size:14px; font-weight:600;}
 
@@ -252,7 +257,7 @@
 
 <header class="nav">
   <div class="wrap row">
-    <div class="brand">Clip<b>2</b>Post</div>
+    <div class="brand"><img src="assets/isotipo.png" alt="" width="24" height="24">Clip<b>2</b>Post</div>
     <a class="entrar" href="#">Entrar</a>
   </div>
 </header>
@@ -541,7 +546,7 @@
 <!-- 10. FOOTER LEGAL -->
 <footer class="legal">
   <div class="wrap row">
-    <div class="brand" style="font-size:14px;">Clip<b>2</b>Post</div>
+    <div class="brand" style="font-size:14px;"><img src="assets/isotipo.png" alt="" width="19" height="19" style="border-radius:5px;">Clip<b>2</b>Post</div>
     <nav>
       <a href="#">Términos de uso</a>
       <a href="#">Política de privacidad</a>
