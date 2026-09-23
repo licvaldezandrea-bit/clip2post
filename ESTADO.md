@@ -1,7 +1,7 @@
 # ESTADO — Clip2Post
-Última actualización: 2026-09-22 | Sesión actual: 5
+Última actualización: 2026-09-23 | Sesión actual: 6
 
-⏸️ CHECKPOINT — Última acción completada: paywall.html mejorado (línea de tiempo del trial Día 0/5/7 fusionada con garantía, CTA fijo al fondo del viewport, precios en formato US$ explícito, estado de error de pago diseñado, disciplina de acento naranja restringida a CTA/selección/H1) y re-verificado por revisor-visual (8 pasadas totales) — VEREDICTO LISTA: Usabilidad 37/40, Craft 18/20, Copy 19/20 (ver docs/revisiones/paywall-veredicto.md) / Siguiente acción exacta: informar al usuario y, con su aprobación, avanzar a Sesión 6 (integraciones reales y seguridad: Supabase, IA real, Hotmart, dominio).
+⏸️ CHECKPOINT — Última acción completada: arrancó Sesión 6 (integraciones reales). Se scaffoldeó el proyecto Next.js real en la raíz (conviviendo con las 5 pantallas HTML de referencia), se escribió el esquema completo de base de datos con seguridad (profiles/videos/piezas/media_jobs/ai_calls, todo con RLS) y el motor de IA real (transcripción + generación de las 3 piezas, con reintentos, tope de gasto y validación de la salida) — verificado con tsc/build limpios. TODAVÍA NO conectado a una base de datos real (falta que el usuario cree sus cuentas) ni las 5 pantallas HTML siguen usando datos de ejemplo (falta conectarlas al motor nuevo). Siguiente acción exacta: el usuario crea las cuentas de Supabase/Anthropic/AssemblyAI y pega las claves en `.env.local` (nunca en el chat); mientras tanto, conectar login.html al login real de Supabase y app.html al endpoint /api/generate.
 
 ## Qué es esta app (3 líneas máximo)
 Plataforma web que convierte un video/podcast largo en publicaciones listas para LinkedIn, hilo de X y estructura de carrusel de Instagram, con el tono de cada red. Usuario: consultores B2B, coaches y creadores independientes que graban contenido pero no tienen tiempo de adaptarlo a cada plataforma. Monetización: suscripción mensual/anual.
@@ -65,10 +65,12 @@ Plataforma web que convierte un video/podcast largo en publicaciones listas para
 - Primera semana D1-D7: pendiente de diseñar en detalle en Sesión 6 junto con notificaciones (requiere backend real)
 
 ## Decisiones técnicas (NO re-discutir sin pedirlo el usuario)
-- Framework: Next.js (App Router) — default del stack pineado del SO (51), necesario por SEO de la landing de venta.
-- Base de datos/Auth: Supabase (Postgres + RLS + Auth con email/Google).
-- Stack de IA: transcripción voz→texto (Whisper/AssemblyAI) + LLM (Claude) para generar los 3 formatos de texto — procesamiento ASÍNCRONO (el video tarda en transcribirse; se muestra estado "generando..." con progreso, nunca un spinner ciego). Corre por servidor/BFF, nunca la clave en el cliente.
-- Qué NUNCA debe hacer la app: nunca publicar/auto-postear en redes sin permiso explícito del usuario · nunca inventar datos o citas que no estén en el video original · nunca compartir el contenido o transcripción del usuario con terceros · nunca presionar con culpa para retener (sin dark patterns de cancelación).
+- Framework: Next.js (App Router) — default del stack pineado del SO (51), necesario por SEO de la landing de venta. Scaffold real ya creado en la raíz del proyecto (`app/`, `lib/`, `proxy.ts`, `package.json`) — convive con las 5 pantallas HTML (siguen siendo la referencia visual hasta que se porten a React).
+- Base de datos/Auth: Supabase (Postgres + RLS + Auth con email/Google). Esquema real escrito en `supabase/migrations/0001_esquema_inicial.sql`: `profiles` (plan/trial/tono/racha, se crea sola al registrarse), `videos`, `piezas` (1 por red y por video), `media_jobs` (cola, patrón async de 30), `ai_calls` (gasto real, de ahí lee el kill-switch). Todas con RLS por `(select auth.uid())`.
+- Stack de IA: transcripción con **AssemblyAI** (`lib/transcribe.ts`) + generación de las 3 piezas con **Claude Sonnet** vía tool-use forzado + zod (`lib/ai-adapter.ts`, nunca parsea texto libre a ciegas). Resiliencia real: reintentos con backoff, circuit-breaker por proveedor (`lib/circuit-breaker.ts`), tope de gasto diario/mensual antes de cada llamada (`lib/budget.ts`). Todo corre en el servidor (`app/api/generate/route.ts`), la clave nunca llega al navegador.
+- ⚠️ Simplificación de esta sesión (documentada, no oculta): el patrón canónico es job 100% asíncrono con worker en background; por ahora el job se procesa DENTRO de la misma llamada a `/api/generate` (más simple, funciona para el volumen inicial) — la tabla `media_jobs` ya quedó modelada para pasar a un worker real sin tocar el esquema, cuando haya más usuarios (ver 13-INFRA-ESCALABILIDAD.md).
+- ⚠️ Límite actual de la transcripción: solo funciona con un archivo de audio/video ya subido (o una URL directa a un .mp3/.mp4 público) — pegar un link de YouTube todavía NO transcribe (haría falta un paso extra para bajar el audio del video, no construido en esta sesión).
+- Qué NUNCA debe hacer la app: nunca publicar/auto-postear en redes sin permiso explícito del usuario · nunca inventar datos o citas que no estén en el video original (el prompt del generador lo exige explícitamente) · nunca compartir el contenido o transcripción del usuario con terceros · nunca presionar con culpa para retener (sin dark patterns de cancelación).
 
 ## Sesiones completadas ✅
 - Sesión 1 — Validación, FICHA-MODELO.md (OpusClip), Constitución, monetización y stack — 2026-09-22
@@ -79,10 +81,9 @@ Plataforma web que convierte un video/podcast largo en publicaciones listas para
 - Sesión 5 (extensión) — Paywall mejorado con línea de tiempo del trial + CTA fijo + disciplina de color, revisor-visual LISTA (37/40·18/20·19/20) tras 8 rondas — 2026-09-22
 
 ## Sesión en progreso 🔧
-(ninguna — Sesión 5 cerrada, pendiente aprobación del usuario para arrancar Sesión 6)
+- Sesión 6 (integraciones reales) — arrancada 2026-09-23. Hecho: scaffold Next.js real + esquema de base de datos con RLS + motor de IA real (transcripción + generación + resiliencia + tope de gasto), todo verificado con `tsc`/`build` limpios. Falta: que el usuario cree sus cuentas (Supabase/Anthropic/AssemblyAI) y pegue las claves en `.env.local`; conectar login.html al login real; conectar app.html/onboarding.html al endpoint `/api/generate` en vez de la simulación con `setTimeout`; Hotmart; dominio.
 
 ## Próximas sesiones 📋
-- Sesión 6: Integraciones reales y seguridad (Supabase, IA real, Hotmart, dominio)
 - Sesión 7: Testing, animaciones, pulido y rigor de entrega
 
 ## Problemas conocidos ⚠️
@@ -93,7 +94,10 @@ Plataforma web que convierte un video/podcast largo en publicaciones listas para
 - [app] La animación de celebración (`assets/celebracion-video-listo.json`, provista por el usuario) pesa ~1.4MB — funciona bien pero conviene comprimirla/recortarla antes de publicar la app para no alargar el primer uso en conexiones lentas de LATAM (ver 38-PERFORMANCE-BUDGET.md)
 
 ## Pendientes del usuario (acciones que el usuario debe hacer)
-(ninguno todavía — se le avisará cuando lleguemos a cuentas/servicios externos)
+- Crear cuenta en Supabase (supabase.com) — ahí van a vivir los datos de los usuarios. En progreso.
+- Crear/activar la cuenta de desarrollador en console.anthropic.com (mismo email que Claude, pero es un panel distinto con su propio saldo de pago) — en progreso, se le explicó que no hace falta una cuenta nueva.
+- Crear cuenta en AssemblyAI (assemblyai.com) — transcribe los videos a texto. Pendiente, aún no se le pidió.
+- Ninguna clave se pide ni se pega en el chat — van directo a `.env.local` (que ya está en `.gitignore`, nunca se sube a git).
 
 ## Notas para la próxima sesión
 - El documento fuente completo está en D:\Desktop\CHAT GPT\CLIP2POST.docx — incluye mapa de empatía completo (10 dolores, 10 deseos, lenguaje literal del cliente).
