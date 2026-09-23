@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js" defer></script>
 <style>
   :root{
     --bg:#1a140d; --surface:#241c13; --hundido:#120d08;
@@ -175,6 +176,33 @@
   .toast svg{color:var(--accent); flex:none;}
   .toast p{margin:0; font-size:12.5px; color:var(--text-1);}
   .toast p b{color:var(--accent);}
+
+  /* celebración premium de tarea final (video convertido en sus 3 piezas) */
+  .celebrate-overlay{
+    position:fixed; inset:0; z-index:80; display:flex; align-items:center; justify-content:center;
+    padding:24px; background:color-mix(in oklab, var(--hundido) 86%, transparent); backdrop-filter:blur(8px);
+    opacity:0; pointer-events:none; transition:opacity .3s ease;
+  }
+  .celebrate-overlay.show{opacity:1; pointer-events:auto;}
+  .celebrate-card{
+    width:100%; max-width:300px; text-align:center;
+    background:var(--surface); border:1px solid var(--line); border-radius:20px;
+    padding:8px 24px 24px; box-shadow:0 30px 70px -20px rgba(0,0,0,.6);
+    transform:translateY(18px) scale(.96); opacity:0;
+    transition:transform .4s cubic-bezier(.2,.8,.2,1), opacity .4s ease;
+  }
+  .celebrate-overlay.show .celebrate-card{transform:translateY(0) scale(1); opacity:1;}
+  .celebrate-lottie{width:118px; height:118px; margin:0 auto 4px; display:flex; align-items:center; justify-content:center; border-radius:18px; overflow:hidden; box-shadow:0 14px 30px -12px rgba(0,0,0,.5), 0 0 0 1px color-mix(in oklab, var(--accent) 25%, transparent);}
+  .celebrate-lottie svg, .celebrate-lottie canvas{display:block;}
+  .celebrate-title{font-family:var(--font-display); font-size:19px; font-weight:800; margin:0; color:var(--text-1);}
+  .celebrate-sub{font-size:12.5px; color:var(--text-2); line-height:1.5; margin:8px 0 20px;}
+  .celebrate-close{
+    width:100%; height:46px; border-radius:var(--radius-btn); border:none; cursor:pointer;
+    font-weight:700; font-size:13.5px; color:var(--bg);
+    background:linear-gradient(180deg, color-mix(in oklab, var(--accent) 86%, white), var(--accent));
+    transition:filter .15s ease, transform .15s ease;
+  }
+  .celebrate-close:hover{filter:brightness(1.06);} .celebrate-close:active{transform:scale(.98);}
 </style>
 </head>
 <body>
@@ -408,10 +436,20 @@
   </div>
 </div>
 
-<!-- toast de celebración (M3-ligero) -->
+<!-- toast de celebración (M3-ligero, para avisos menores de Cuenta) -->
 <div class="toast" id="celebToast">
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 2.6 6.9L22 9.3l-5.4 4.6 1.8 7.1L12 17l-6.4 4 1.8-7.1L2 9.3l7.4-.4Z"/></svg>
   <p id="celebToastText">¡Video nuevo listo!</p>
+</div>
+
+<!-- celebración premium: se muestra cada vez que el usuario completa la tarea final (convertir un video en sus 3 piezas) -->
+<div class="celebrate-overlay" id="celebrateOverlay" role="dialog" aria-modal="true" aria-label="Celebración">
+  <div class="celebrate-card">
+    <div class="celebrate-lottie" id="celebrateLottie"></div>
+    <h2 class="celebrate-title" id="celebrateTitle">¡Video convertido!</h2>
+    <p class="celebrate-sub" id="celebrateSub">Tus 3 piezas están listas para copiar.</p>
+    <button class="celebrate-close" id="celebrateCloseBtn">Seguir</button>
+  </div>
 </div>
 
 <script>
@@ -503,6 +541,36 @@
     setTimeout(function(){ btn.textContent = COPY_LABEL; btn.classList.remove('done'); }, 1800);
   }
 
+  // ── Celebración premium de tarea final (Lottie, respeta reduced-motion) ──
+  var celebrateOverlay = document.getElementById('celebrateOverlay');
+  var celebrateLottieBox = document.getElementById('celebrateLottie');
+  var celebAnim = null, celebAutoTimer = null;
+  function closeCelebration(){
+    if (celebAutoTimer) { clearTimeout(celebAutoTimer); celebAutoTimer = null; }
+    celebrateOverlay.classList.remove('show');
+    if (celebAnim) { celebAnim.destroy(); celebAnim = null; }
+  }
+  function playCelebration(title, sub){
+    document.getElementById('celebrateTitle').textContent = title;
+    document.getElementById('celebrateSub').textContent = sub;
+    celebrateLottieBox.innerHTML = '';
+    celebrateOverlay.classList.add('show');
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduced && window.lottie) {
+      celebAnim = lottie.loadAnimation({
+        container: celebrateLottieBox, renderer: 'svg', loop: false, autoplay: true,
+        path: 'assets/celebracion-video-listo.json'
+      });
+      celebAnim.addEventListener('complete', function(){ celebAutoTimer = setTimeout(closeCelebration, 900); });
+      celebAutoTimer = setTimeout(closeCelebration, 6000); // red de seguridad si el asset tarda en cargar
+    } else {
+      celebrateLottieBox.innerHTML = '<svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>';
+      celebAutoTimer = setTimeout(closeCelebration, 2400);
+    }
+  }
+  document.getElementById('celebrateCloseBtn').addEventListener('click', closeCelebration);
+  celebrateOverlay.addEventListener('click', function(e){ if (e.target === celebrateOverlay) closeCelebration(); });
+
   // ── Modal nuevo video ──
   var overlay = document.getElementById('modalOverlay');
   var uploadState = document.getElementById('uploadState');
@@ -527,7 +595,9 @@
   document.getElementById('cancelGenBtn').addEventListener('click', cancelGeneration);
   overlay.addEventListener('click', function(e){ if (e.target === overlay && !genTimer) closeModal(); });
   document.addEventListener('keydown', function(e){
-    if (e.key === 'Escape' && overlay.classList.contains('show')) {
+    if (e.key !== 'Escape') return;
+    if (celebrateOverlay.classList.contains('show')) { closeCelebration(); return; }
+    if (overlay.classList.contains('show')) {
       if (genTimer) { cancelGeneration(); } else { closeModal(); }
     }
   });
@@ -575,10 +645,7 @@
       var newPiezas = parseInt(piezasEl.textContent, 10) + 3;
       videosEl.childNodes[0].textContent = newVideos;
       piezasEl.childNodes[0].textContent = newPiezas;
-      document.getElementById('celebToastText').innerHTML = '¡Video #' + newVideos + '! <b>' + newPiezas + ' piezas generadas</b> en total — sigues sin reescribir nada a mano.';
-      var toast = document.getElementById('celebToast');
-      toast.classList.add('show');
-      setTimeout(function(){ toast.classList.remove('show'); }, 3600);
+      playCelebration('¡Video #' + newVideos + ' convertido!', newPiezas + ' piezas generadas en total — sigues sin reescribir nada a mano.');
     }, 2400);
   });
 

@@ -90,6 +90,7 @@ Plataforma web que convierte un video/podcast largo en publicaciones listas para
 - [docs/copy] Footer legal de landing.html tiene enlaces placeholder a Términos/Privacidad/Contacto — el contenido real de esas páginas se redacta con 47-LEGAL-FISCAL-Y-PRIVACIDAD.md, pendiente
 - [app] Los estados vacío (`#emptyVideos`) y de error (`#errorVideo`) de app.html están diseñados y estilizados pero no wireados a condiciones reales (siguen con clase `.hidden`) — se activan con datos reales de Supabase en Sesión 6
 - [app] "Tono de las piezas" y "Facturación y plan" en Cuenta muestran un toast "se conecta en la Sesión 6" — son placeholders honestos, no funciones rotas
+- [app] La animación de celebración (`assets/celebracion-video-listo.json`, provista por el usuario) pesa ~1.4MB — funciona bien pero conviene comprimirla/recortarla antes de publicar la app para no alargar el primer uso en conexiones lentas de LATAM (ver 38-PERFORMANCE-BUDGET.md)
 
 ## Pendientes del usuario (acciones que el usuario debe hacer)
 (ninguno todavía — se le avisará cuando lleguemos a cuentas/servicios externos)
