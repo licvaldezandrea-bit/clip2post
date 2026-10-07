@@ -1,7 +1,7 @@
 # ESTADO — Clip2Post
-Última actualización: 2026-09-23 | Sesión actual: 6
+Última actualización: 2026-10-07 | Sesión actual: 6
 
-⏸️ CHECKPOINT — Última acción completada: arrancó Sesión 6 (integraciones reales). Se scaffoldeó el proyecto Next.js real en la raíz (conviviendo con las 5 pantallas HTML de referencia), se escribió el esquema completo de base de datos con seguridad (profiles/videos/piezas/media_jobs/ai_calls, todo con RLS) y el motor de IA real (transcripción + generación de las 3 piezas, con reintentos, tope de gasto y validación de la salida) — verificado con tsc/build limpios. TODAVÍA NO conectado a una base de datos real (falta que el usuario cree sus cuentas) ni las 5 pantallas HTML siguen usando datos de ejemplo (falta conectarlas al motor nuevo). Siguiente acción exacta: el usuario crea las cuentas de Supabase/Anthropic/AssemblyAI y pega las claves en `.env.local` (nunca en el chat); mientras tanto, conectar login.html al login real de Supabase y app.html al endpoint /api/generate.
+⏸️ CHECKPOINT — Última acción completada: Sesión 6 — servicios conectados. GitHub (repo privado `licvaldezandrea-bit/clip2post`, rama `main`, push verificado), Vercel (proyecto `clip2post` en el equipo CLIP2POST/Hobby, conectado al repo por la GitHub App; primer deploy creado, muestra Internal Server Error porque FALTAN las variables de entorno en Vercel), Supabase (proyecto `munpaeapqpqlyiegguok`, us-east-1; esquema de `0001_esquema_inicial.sql` aplicado y verificado: 5 tablas, RLS activo en todas, políticas 1/3/2/4, trigger `on_auth_user_created` existe). `.env.local` completo y validado (Anthropic, AssemblyAI, Supabase URL + publishable + secret formato nuevo; las 2 de Supabase probadas contra el proyecto: válidas). Claves guardadas con `scripts/guardar-clave.ps1` (+ `.bat` de doble clic), nunca en el chat. Siguiente acción exacta: cargar las variables de `.env.local` en Vercel (Settings → Environment Variables, pegando el archivo completo, solo Production+Preview), redeploy y comprobar que la web abre; luego conectar login.html al login real de Supabase Auth y app.html/onboarding.html al endpoint `/api/generate`.
 
 ## Qué es esta app (3 líneas máximo)
 Plataforma web que convierte un video/podcast largo en publicaciones listas para LinkedIn, hilo de X y estructura de carrusel de Instagram, con el tono de cada red. Usuario: consultores B2B, coaches y creadores independientes que graban contenido pero no tienen tiempo de adaptarlo a cada plataforma. Monetización: suscripción mensual/anual.
@@ -94,9 +94,7 @@ Plataforma web que convierte un video/podcast largo en publicaciones listas para
 - [app] La animación de celebración (`assets/celebracion-video-listo.json`, provista por el usuario) pesa ~1.4MB — funciona bien pero conviene comprimirla/recortarla antes de publicar la app para no alargar el primer uso en conexiones lentas de LATAM (ver 38-PERFORMANCE-BUDGET.md)
 
 ## Pendientes del usuario (acciones que el usuario debe hacer)
-- Crear cuenta en Supabase (supabase.com) — ahí van a vivir los datos de los usuarios. En progreso.
-- Crear/activar la cuenta de desarrollador en console.anthropic.com (mismo email que Claude, pero es un panel distinto con su propio saldo de pago) — en progreso, se le explicó que no hace falta una cuenta nueva.
-- Crear cuenta en AssemblyAI (assemblyai.com) — transcribe los videos a texto. Pendiente, aún no se le pidió.
+- ✅ Supabase, Anthropic, AssemblyAI, GitHub y Vercel: cuentas creadas y conectadas (2026-10-07).
 - Ninguna clave se pide ni se pega en el chat — van directo a `.env.local` (que ya está en `.gitignore`, nunca se sube a git).
 
 ## Notas para la próxima sesión
@@ -104,3 +102,9 @@ Plataforma web que convierte un video/podcast largo en publicaciones listas para
 - Nombre definitivo: Clip2Post (confirmado por el usuario).
 - Moneda: todos los precios del proyecto van en USD ($12.99/mes · $89.00/año · $7.42/mes mostrado) — confirmado explícitamente por el usuario, no cambiar a moneda local sin pedirlo él.
 - Prototipo estático (sin backend aún): landing.html → onboarding.html → paywall.html → login.html están enlazados entre sí y usan un video de ejemplo consistente ("Cómo cerrar clientes B2B") — la conexión real de datos entre pantallas llega en Sesión 6 con Supabase.
+
+## Notas de operación (2026-10-07)
+- Proyecto Supabase de Clip2Post: `munpaeapqpqlyiegguok` (org licvaldezandrea-bit). El conector de Supabase de la sesión ve OTRA cuenta/proyecto (`ecoaustral`) — NO tocarlo desde esta sesión; las migraciones de Clip2Post se aplican pegando el SQL en el SQL Editor del dashboard.
+- Plan gratuito de Supabase pausa el proyecto tras ~1 semana sin actividad (pasó una vez y se reanudó con "Resume"). Antes de vender: pasar a plan que no se pause. Vercel Hobby es no comercial: pasar a Pro antes de cobrar.
+- Claves: se guardan con `scripts/GUARDAR-CLAVE-*.bat` (doble clic, pegado oculto). Si una clave aparece en chat/captura/log → rotarla (ocurrió con Anthropic y AssemblyAI en pruebas; ya rotadas). Revisar que las claves viejas de Anthropic/AssemblyAI y las "Legacy API keys" de Supabase estén eliminadas/deshabilitadas.
+- Pendiente de saldo: la cuenta de Anthropic tenía 0 US$ — hay que cargar fondos para que la generación real funcione.
