@@ -144,7 +144,7 @@
   <p class="sub reveal d3">Tu post de <span class="net-tag net-li">LinkedIn</span> ya está listo. Desbloquea para generar también el <span class="net-tag net-x">hilo de X</span> y el <span class="net-tag net-ig">carrusel de Instagram</span> del mismo video.</p>
 
   <!-- 3: qué pierdo si no sigo, como nota corta separada -->
-  <p class="urgencia reveal d4">Si no activas tu plan hoy, ambos se quedan sin generar y tu próximo video vuelve a tomarte horas a mano.</p>
+  <p class="urgencia reveal d4" id="urgenciaTxt">Si no activas tu plan hoy, ambos se quedan sin generar y tu próximo video vuelve a tomarte horas a mano.</p>
 
   <!-- 4: qué gano hoy (beneficios concretos, máx 3 — incluye precio vs. agencia y "nunca publica por ti" de FICHA-AVATAR) -->
   <div class="beneficios reveal d5">
@@ -163,7 +163,7 @@
   </div>
 
   <!-- línea de tiempo + garantía fusionadas en 1 sola card (elimina la ansiedad de "me van a cobrar sin avisar") -->
-  <div class="timeline reveal d5b">
+  <div class="timeline reveal d5b" id="timelineBox">
     <p class="tl-title">Cómo funciona tu prueba</p>
     <div class="tl-item">
       <div class="tl-dot on"></div>
@@ -224,6 +224,7 @@
   <a class="skip" href="login.html">Ahora no, seguir explorando</a>
 </div>
 
+<script src="checkout-config.js"></script>
 <script>
   var planAnual = document.getElementById('planAnual');
   var planMensual = document.getElementById('planMensual');
@@ -243,8 +244,32 @@
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); (p === planAnual ? planMensual : planAnual).focus(); }
     });
   });
+  // Modo compra: quien ya terminó su prueba (o su plan venció) paga por Hotmart.
+  var modoCompra = /[?&]comprar=1/.test(location.search);
+  var planElegido = 'anual';
+  planAnual.addEventListener('click', function(){ planElegido = 'anual'; });
+  planMensual.addEventListener('click', function(){ planElegido = 'mensual'; });
+  if (modoCompra) {
+    document.getElementById('timelineBox').classList.add('hidden');
+    document.getElementById('urgenciaTxt').classList.add('hidden');
+    cta.textContent = 'Continuar al pago seguro';
+    ctaFine.textContent = 'Pago procesado por Hotmart · Garantía del Primer Post';
+    var selOriginal = selectPlan;
+    selectPlan = function(el, price){
+      selOriginal(el, price);
+      ctaFine.textContent = 'Pago procesado por Hotmart · ' + price + ' · Garantía del Primer Post';
+    };
+  }
   cta.addEventListener('click', function(){
     if (cta.disabled) return;
+    if (modoCompra) {
+      var enlace = (window.C2P_CHECKOUT || {})[planElegido];
+      if (enlace) { window.location.href = enlace; return; }
+      var err = document.getElementById('payError');
+      err.querySelector('span').innerHTML = '<b>El pago online se está activando</b>Todavía no podemos cobrarte desde acá. Vuelve a intentar en unas horas; tu cuenta y tus piezas siguen guardadas.';
+      err.classList.remove('hidden');
+      return;
+    }
     document.getElementById('payError').classList.add('hidden');
     cta.disabled = true;
     cta.innerHTML = '<span class="spinner" aria-hidden="true"></span> Confirmando...';

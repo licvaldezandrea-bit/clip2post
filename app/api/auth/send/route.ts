@@ -5,12 +5,15 @@ import { createClient } from "@/lib/supabase/server";
 // Envía el acceso por correo (link + código de 6 dígitos). Todo del lado del servidor:
 // el navegador nunca habla con Supabase Auth directamente, así las cookies de sesión son
 // httpOnly y no hace falta cargar librerías de terceros en la página de entrar.
-const BodySchema = z.object({ email: z.string().trim().toLowerCase().email().max(200) });
+const BodySchema = z.object({
+  email: z.string().trim().toLowerCase().email().max(200),
+  acepta: z.literal(true), // casilla de términos + privacidad, nunca premarcada
+});
 
 export async function POST(req: Request) {
   const parsed = BodySchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) {
-    return NextResponse.json({ error: "Ese correo no parece válido.", codigo: "email" }, { status: 400 });
+    return NextResponse.json({ error: "Escribe un correo válido y acepta los términos para continuar.", codigo: "email" }, { status: 400 });
   }
 
   const origen = new URL(req.url).origin;

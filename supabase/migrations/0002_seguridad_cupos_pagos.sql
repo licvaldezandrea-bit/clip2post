@@ -140,3 +140,7 @@ begin
   return new;
 end;
 $$;
+
+-- ── 6. Consentimiento atribuible (términos + privacidad), registrado con versión y fecha ──
+alter table public.profiles add column if not exists consentimiento_version text;
+alter table public.profiles add column if not exists consentimiento_at timestamptz;

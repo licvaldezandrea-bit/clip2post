@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { registrarConsentimiento } from "@/lib/consent";
 
 const BodySchema = z.object({
   email: z.string().trim().toLowerCase().email().max(200),
@@ -14,7 +15,7 @@ export async function POST(req: Request) {
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.verifyOtp({
+  const { data, error } = await supabase.auth.verifyOtp({
     email: parsed.data.email,
     token: parsed.data.codigo,
     type: "email",
@@ -25,5 +26,6 @@ export async function POST(req: Request) {
       { status: 401 },
     );
   }
+  if (data.user?.id) await registrarConsentimiento(data.user.id);
   return NextResponse.json({ ok: true });
 }

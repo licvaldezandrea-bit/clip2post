@@ -68,17 +68,9 @@
 
   .hint{text-align:center; font-size:12px; color:var(--text-2); margin-top:10px; line-height:1.5;}
 
-  .divider{display:flex; align-items:center; gap:12px; margin:26px 0; color:var(--text-2); font-size:12px;}
-  .divider::before, .divider::after{content:''; flex:1; height:1px; background:var(--line);}
-
-  .oauth{
-    display:flex; align-items:center; justify-content:center; gap:10px;
-    height:50px; border-radius:var(--radius-btn); font-weight:600; font-size:14.5px; color:var(--text-1);
-    background:var(--surface); border:1px solid var(--line); cursor:pointer; width:100%;
-    transition:border-color .15s ease, background .15s ease;
-  }
-  .oauth:hover{border-color:color-mix(in oklab, var(--accent) 30%, var(--line)); background:var(--hundido);}
-
+  .consent{display:flex; align-items:flex-start; gap:10px; margin:14px 2px 0; font-size:13px; color:var(--text-2); line-height:1.45; cursor:pointer;}
+  .consent input{margin-top:2px; width:18px; height:18px; flex:none; accent-color:var(--accent);}
+  .consent a{color:var(--text-1);}
   .sent{display:none; flex-direction:column; align-items:center; gap:14px; text-align:center;}
   .sent.show{display:flex;}
   .sent .check{width:56px; height:56px; border-radius:50%; background:color-mix(in oklab, #34D399 16%, transparent); border:1px solid rgba(52,211,153,.35); display:flex; align-items:center; justify-content:center;}
@@ -111,19 +103,14 @@
     </div>
     <p class="errmsg" id="emailErr">Escribe un correo válido para poder enviarte el acceso.</p>
 
+    <label class="consent reveal d5"><input type="checkbox" id="consent"><span>Acepto los <a href="/terminos" target="_blank" rel="noopener">términos</a> y la <a href="/privacidad" target="_blank" rel="noopener">política de privacidad</a></span></label>
+
     <button class="cta reveal d5" id="sendBtn"><span class="spinner"></span><span class="label">Enviarme el acceso</span></button>
-    <p class="hint reveal d5">Revisa también spam — el remitente es hola@clip2post.com</p>
-
-    <div class="divider reveal d6">o</div>
-
-    <button class="oauth reveal d7">
-      <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.52 12.27c0-.85-.08-1.67-.22-2.45H12v4.64h6.47a5.53 5.53 0 0 1-2.4 3.63v3h3.87c2.27-2.09 3.58-5.17 3.58-8.82z"/><path fill="#34A853" d="M12 24c3.24 0 5.96-1.07 7.94-2.91l-3.87-3c-1.08.72-2.45 1.15-4.07 1.15-3.13 0-5.78-2.11-6.73-4.96H1.27v3.1A12 12 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.27 14.28A7.2 7.2 0 0 1 4.89 12c0-.79.14-1.56.38-2.28v-3.1H1.27A12 12 0 0 0 0 12c0 1.94.46 3.77 1.27 5.38z"/><path fill="#EA4335" d="M12 4.75c1.76 0 3.34.6 4.58 1.79l3.44-3.44C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.69 1.27 6.62l4 3.1C6.22 6.86 8.87 4.75 12 4.75z"/></svg>
-      Continuar con Google
-    </button>
+    <p class="hint reveal d5">Revisa también spam y promociones: el correo puede tardar un minuto.</p>
 
     <a class="rescue reveal d8" href="#" id="rescueLink">Ya compré Clip2Post y no me llega el correo</a>
     <div class="rescue-box" id="rescueBox">
-      <p>Revisa spam y promociones primero. Si no aparece en 10 minutos, escríbenos a soporte@clip2post.com con el correo de tu compra en Hotmart.</p>
+      <p>Revisa spam y promociones primero. Si no aparece en 10 minutos, escríbenos desde el soporte de tu compra en Hotmart indicando el correo con el que compraste.</p>
       <a class="rescue" href="#" id="rescueClose">Entendido</a>
     </div>
   </div>
@@ -152,25 +139,49 @@
   var emailField = document.getElementById('emailField');
   var emailErr = document.getElementById('emailErr');
   var sendBtn = document.getElementById('sendBtn');
+  var otpInputs = document.querySelectorAll('.otp input');
+  var otpErr = document.getElementById('otpErr');
+  var otpGroup = document.getElementById('otpGroup');
+  var emailActual = '';
 
   function validEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+  function mostrarErrorEmail(msg){ emailErr.textContent = msg; emailField.classList.add('err'); emailErr.classList.add('show'); }
+
+  function post(url, cuerpo){
+    return fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(cuerpo) })
+      .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(d){ return { ok: r.ok, data: d }; }); })
+      .catch(function(){ return { ok: false, data: { error: 'Sin conexión. Revisa tu internet e intenta de nuevo.' } }; });
+  }
+
+  function enviarAcceso(email, alTerminar){
+    post('/api/auth/send', { email: email, acepta: true }).then(function(res){ alTerminar(res); });
+  }
 
   sendBtn.addEventListener('click', function(){
     var val = emailInput.value.trim();
     if (!validEmail(val)) {
-      emailField.classList.add('err'); emailErr.classList.add('show');
+      mostrarErrorEmail('Escribe un correo válido para poder enviarte el acceso.');
       emailInput.focus();
+      return;
+    }
+    if (!document.getElementById('consent').checked) {
+      mostrarErrorEmail('Marca la casilla para aceptar los términos y la política de privacidad.');
       return;
     }
     emailField.classList.remove('err'); emailErr.classList.remove('show');
     sendBtn.classList.add('loading'); sendBtn.disabled = true;
-    setTimeout(function(){
+    enviarAcceso(val, function(res){
+      sendBtn.classList.remove('loading'); sendBtn.disabled = false;
+      if (!res.ok) { mostrarErrorEmail(res.data.error || 'No pudimos enviar el correo. Intenta de nuevo.'); return; }
+      emailActual = val;
       document.getElementById('sentEmail').textContent = val;
       document.getElementById('formWrap').classList.add('hide');
       document.getElementById('sentWrap').classList.add('show');
       document.querySelector('.otp input').focus();
-    }, 900);
+    });
   });
+
+  emailInput.addEventListener('keydown', function(e){ if (e.key === 'Enter') sendBtn.click(); });
 
   document.getElementById('backToForm').addEventListener('click', function(e){
     e.preventDefault();
@@ -179,34 +190,54 @@
     sendBtn.classList.remove('loading'); sendBtn.disabled = false;
   });
 
-  var otpInputs = document.querySelectorAll('.otp input');
-  var otpErr = document.getElementById('otpErr');
-  var otpGroup = document.getElementById('otpGroup');
+  function limpiarOtp(){
+    otpInputs.forEach(function(o){ o.value = ''; o.style.borderColor = ''; });
+    otpInputs[0].focus();
+  }
+
+  function verificarCodigo(codigo){
+    otpInputs.forEach(function(o){ o.disabled = true; });
+    post('/api/auth/verify', { email: emailActual, codigo: codigo }).then(function(res){
+      if (res.ok) { window.location.href = '/app.html'; return; }
+      otpInputs.forEach(function(o){ o.disabled = false; o.style.borderColor = '#F87171'; });
+      otpErr.textContent = res.data.error || 'Código incorrecto — intenta de nuevo.';
+      otpErr.classList.add('show');
+      otpInputs[otpInputs.length - 1].focus();
+    });
+  }
+
   otpInputs.forEach(function(inp, i){
     inp.addEventListener('input', function(){
+      inp.value = inp.value.replace(/\D/g, '');
       otpErr.classList.remove('show'); otpGroup.classList.remove('err');
+      otpInputs.forEach(function(o){ o.style.borderColor = ''; });
       if (inp.value && otpInputs[i+1]) otpInputs[i+1].focus();
-      if (i === otpInputs.length - 1 && inp.value) {
-        var code = Array.prototype.map.call(otpInputs, function(o){ return o.value; }).join('');
-        if (code.length === 6 && code !== '000000') {
-          otpErr.classList.add('show');
-          otpInputs.forEach(function(o){ o.style.borderColor = '#F87171'; });
-        }
-      }
+      var code = Array.prototype.map.call(otpInputs, function(o){ return o.value; }).join('');
+      if (code.length === 6) verificarCodigo(code);
     });
     inp.addEventListener('keydown', function(e){
       if (e.key === 'Backspace' && !inp.value && otpInputs[i-1]) otpInputs[i-1].focus();
+    });
+    inp.addEventListener('paste', function(e){
+      var texto = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
+      if (texto.length < 2) return;
+      e.preventDefault();
+      texto.split('').forEach(function(d, k){ if (otpInputs[k]) otpInputs[k].value = d; });
+      if (texto.length === 6) verificarCodigo(texto); else otpInputs[Math.min(texto.length, 5)].focus();
     });
   });
 
   document.getElementById('resendCode').addEventListener('click', function(e){
     e.preventDefault();
     otpErr.classList.remove('show');
-    otpInputs.forEach(function(o){ o.value = ''; o.style.borderColor = ''; });
-    otpInputs[0].focus();
+    limpiarOtp();
     var resentMsg = document.getElementById('resentMsg');
-    resentMsg.style.display = 'block';
-    setTimeout(function(){ resentMsg.style.display = 'none'; }, 3000);
+    enviarAcceso(emailActual, function(res){
+      resentMsg.textContent = res.ok ? 'Te mandamos un código nuevo.' : (res.data.error || 'No pudimos reenviarlo, intenta en un minuto.');
+      resentMsg.style.color = res.ok ? '#34D399' : '#F87171';
+      resentMsg.style.display = 'block';
+      setTimeout(function(){ resentMsg.style.display = 'none'; }, 4000);
+    });
   });
 
   document.getElementById('rescueLink').addEventListener('click', function(e){
@@ -217,6 +248,10 @@
     e.preventDefault();
     document.getElementById('rescueBox').classList.remove('show');
   });
+
+  if (/[?&]error=link/.test(location.search)) {
+    mostrarErrorEmail('Ese link venció o ya se usó. Pide uno nuevo y entra con el código si prefieres.');
+  }
 </script>
 
 </body>

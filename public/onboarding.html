@@ -53,18 +53,7 @@
   .chip-opt .dot-ic{width:38px; height:38px; border-radius:10px; background:var(--hundido); display:flex; align-items:center; justify-content:center; flex:none;}
   .chip-opt .sub-ch{display:block; font-size:12px; font-weight:500; color:var(--text-2); margin-top:2px;}
 
-  /* PASO 2 — pegar video */
-  .dropzone{
-    flex:1; margin-top:24px; border:1.5px dashed color-mix(in oklab, var(--accent) 35%, transparent);
-    border-radius:var(--radius-card); display:flex; flex-direction:column; align-items:center; justify-content:center;
-    gap:12px; text-align:center; padding:28px; background:color-mix(in oklab, var(--accent) 4%, transparent); min-height:220px;
-    position:relative; cursor:pointer;
-  }
-  .dropzone svg{color:var(--accent);}
-  .dropzone b{font-size:15px;}
-  .dropzone span{font-size:13px; color:var(--text-2);}
-  .field{margin-top:16px; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:13px 14px; font-size:14px; color:var(--text-2); display:flex; align-items:center; gap:10px;}
-  .field.err{border-color:#F87171;}
+  /* PASO 2 — ejemplo */
   .errmsg{font-size:12px; color:#F87171; margin-top:6px; display:none;}
   .errmsg.show{display:block;}
   .field input{background:none; border:none; color:var(--text-1); font-family:var(--font-body); font-size:14px; flex:1; outline:none;}
@@ -148,23 +137,16 @@
     <button class="cta" id="next1" disabled>Continuar</button>
   </section>
 
-  <!-- PASO 2: pegar video (ACTIVAR) -->
+  <!-- PASO 2: mostrar el ejemplo (el video real se sube desde la cuenta) -->
   <section class="step" data-step="2">
     <span class="kicker">Paso 2 de 4</span>
-    <h1>Pega tu video o súbelo</h1>
-    <p class="sub">YouTube, Zoom, Drive o el archivo directo. Sin configurar nada más.</p>
-    <label class="dropzone" for="fileInput" id="dropzoneLabel">
-      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
-      <b id="dropzoneText">Toca para elegir tu archivo</b>
-      <span>o pega un link abajo</span>
-      <input type="file" id="fileInput" accept="video/*,audio/*" style="position:absolute; width:1px; height:1px; opacity:0; overflow:hidden;">
-    </label>
-    <div class="field">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7.5-.5l-2 2a5 5 0 0 0 7 7l1-1"/></svg>
-      <input type="text" id="videoUrl" placeholder="https://youtube.com/watch?v=..." aria-describedby="videoErr" aria-invalid="false">
+    <h1>Mira cómo queda un video convertido</h1>
+    <p class="sub">Tu primer video real lo subes desde tu cuenta, en el último paso. Ahora te mostramos un ejemplo para que veas el resultado.</p>
+    <div class="res-card d1">
+      <div class="head"><span class="net">Video de ejemplo</span></div>
+      <p><b>Cómo cerrar clientes B2B</b> · charla de 12 minutos. De acá salen tu post de LinkedIn, tu hilo de X y tu carrusel de Instagram.</p>
     </div>
-    <p class="errmsg" id="videoErr">Pega un link o sube un archivo para continuar.</p>
-    <button class="cta" id="next2">Generar mi primer resultado</button>
+    <button class="cta" id="next2">Ver el ejemplo</button>
   </section>
 
   <!-- PASO 3: generando (crea deseo) -->
@@ -178,23 +160,23 @@
         </svg>
         <div class="ring-center">Generando</div>
       </div>
-      <h1 style="font-size:19px;">Creando tu Multiplicador de Voz</h1>
+      <h1 style="font-size:19px;">Armando el ejemplo</h1>
       <ul class="load-list">
-        <li><span class="dot"></span>Transcribiendo tu video</li>
+        <li><span class="dot"></span>Transcribiendo el video de muestra</li>
         <li><span class="dot"></span>Leyendo el contexto completo</li>
-        <li><span class="dot"></span>Escribiendo con tu tono</li>
+        <li><span class="dot"></span>Escribiendo cada pieza</li>
       </ul>
     </div>
   </section>
 
   <!-- PASO 4: resultado + reconocimiento (prepara el pago) -->
   <section class="step" data-step="4">
-    <span class="kicker">Paso 4 de 4 · Listo</span>
-    <h1>Tu primer post ya está escrito</h1>
+    <span class="kicker">Paso 4 de 4 · Ejemplo</span>
+    <h1>Así queda el resultado</h1>
     <p class="sub" id="recognitionText">No te faltaba disciplina para publicar seguido — te faltaba dejar de reescribir cada red a mano. Esto es lo que acabas de resolver:</p>
 
     <div class="res-card d1">
-      <div class="head"><span class="net">LinkedIn</span></div>
+      <div class="head"><span class="net">LinkedIn · ejemplo</span></div>
       <p><b>Perdí 6 horas</b> reescribiendo un solo video para 3 redes. Así que dejé de hacerlo a mano...</p>
     </div>
     <div class="res-locked d2">
@@ -257,32 +239,11 @@
   document.getElementById('next1').addEventListener('click', function(){ goTo(2); });
   document.getElementById('skipLink').addEventListener('click', function(e){ e.preventDefault(); goTo(2); });
 
-  var videoInput = document.getElementById('videoUrl');
-  var videoField = videoInput.closest('.field');
   document.getElementById('next2').addEventListener('click', function(){
-    var val = videoInput.value.trim();
-    var hasFile = document.getElementById('fileInput').files.length > 0;
-    if (!val && !hasFile) {
-      videoField.classList.add('err');
-      videoInput.setAttribute('aria-invalid', 'true');
-      document.getElementById('videoErr').classList.add('show');
-      return;
-    }
-    videoField.classList.remove('err');
-    videoInput.setAttribute('aria-invalid', 'false');
-    document.getElementById('videoErr').classList.remove('show');
     goTo(3);
     loadingTimer = setTimeout(function(){ goTo(4); }, 2700);
   });
-
-  document.getElementById('fileInput').addEventListener('change', function(){
-    if (this.files && this.files[0]) {
-      document.getElementById('dropzoneText').textContent = this.files[0].name;
-      videoField.classList.remove('err');
-      document.getElementById('videoErr').classList.remove('show');
-    }
-  });
-  document.getElementById('next4').addEventListener('click', function(){ window.location.href = 'paywall.html'; });
+    document.getElementById('next4').addEventListener('click', function(){ window.location.href = 'paywall.html'; });
 
   goTo(1);
 </script>
