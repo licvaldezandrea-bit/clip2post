@@ -123,7 +123,7 @@
   .soon-badge{display:inline-block; margin-left:6px; font-size:10px; font-weight:700; color:var(--text-2); background:var(--hundido); border:1px solid var(--line); padding:2px 7px; border-radius:999px; vertical-align:1px;}
   .acc-row span.lbl{display:flex; align-items:center; gap:12px;}
   .acc-row svg{color:var(--text-2);}
-  .acc-row .val{color:var(--text-2); font-size:12.5px;}
+  .acc-row .val{color:var(--text-2); font-size:12.5px; min-width:0; margin-left:14px; text-align:right; overflow-wrap:anywhere;}
   .logout{width:100%; margin-top:24px; height:48px; border-radius:var(--radius-btn); background:none; border:1px solid var(--line); color:#F87171; font-weight:600; font-size:14px; cursor:pointer;}
 
   /* tab bar */
@@ -492,8 +492,8 @@
   // ── Render: Inicio ──
   function renderInicio(){
     var d = state.data;
-    var nombre = (d.usuario.email || '').split('@')[0].replace(/[._-]+/g, ' ');
-    nombre = nombre.charAt(0).toUpperCase() + nombre.slice(1);
+    var nombre = ((d.usuario.email || '').split('@')[0].match(/[a-zA-ZÀ-ÿ]+/) || [''])[0];
+    nombre = nombre.length > 1 ? nombre.charAt(0).toUpperCase() + nombre.slice(1).toLowerCase() : '';
     $('saludo').textContent = nombre ? 'Hola, ' + nombre : 'Hola';
     avatarBtn.textContent = (nombre.charAt(0) || 'C').toUpperCase();
 
