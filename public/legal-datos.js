@@ -1,8 +1,8 @@
 // Datos del responsable del servicio (los pide la ley: LGPD, Ley 1581, LFPDPPP y afines).
 // Se completan UNA sola vez acá y se reflejan en Términos y Privacidad.
 window.C2P_LEGAL = {
-  titular: '',
-  pais: '',
+  titular: 'Andrea Valdez',
+  pais: 'Argentina',
   contacto: ''
 };
 
