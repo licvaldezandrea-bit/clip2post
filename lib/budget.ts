@@ -57,5 +57,8 @@ export function limitesDeUso() {
     limiteMes: env.AI_MONTHLY_BUDGET_USD,
     maxTrial: env.MAX_VIDEOS_TRIAL,
     maxMes: env.MAX_VIDEOS_MES,
+    costoTrial: env.MAX_COSTO_TRIAL_USD,
+    costoMensual: env.MAX_COSTO_MENSUAL_USD,
+    costoAnual: env.MAX_COSTO_ANUAL_USD,
   };
 }

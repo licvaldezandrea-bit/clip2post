@@ -37,7 +37,7 @@ const RESPUESTAS: Record<string, { status: number; error: string; codigo: string
   cupo_agotado: {
     status: 402,
     codigo: "cupo_agotado",
-    error: "Llegaste al límite de videos de tu plan por ahora.",
+    error: "Llegaste al uso incluido de tu plan por este período. Se renueva el mes que viene.",
   },
   en_curso: {
     status: 409,
@@ -88,6 +88,9 @@ export async function POST(req: Request) {
     p_limite_mes: lim.limiteMes,
     p_max_trial: lim.maxTrial,
     p_max_mes: lim.maxMes,
+    p_costo_trial: lim.costoTrial,
+    p_costo_mensual: lim.costoMensual,
+    p_costo_anual: lim.costoAnual,
   });
   if (reservaError || !reserva) {
     console.error("[generate] reserve_generation falló", reservaError?.message);

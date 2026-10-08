@@ -27,6 +27,10 @@ const envSchema = z.object({
   MAX_VIDEOS_TRIAL: conDefecto(z.coerce.number().int().positive(), 3),
   MAX_VIDEOS_MES: conDefecto(z.coerce.number().int().positive(), 60),
   AI_RESERVA_USD: conDefecto(z.coerce.number().positive(), 0.5),
+  // Tope de costo REAL de IA por usuario y por mes (~20% del precio de cada plan: anual US$7.42, mensual US$12.99)
+  MAX_COSTO_TRIAL_USD: conDefecto(z.coerce.number().positive(), 0.5),
+  MAX_COSTO_MENSUAL_USD: conDefecto(z.coerce.number().positive(), 2.4),
+  MAX_COSTO_ANUAL_USD: conDefecto(z.coerce.number().positive(), 1.4),
   ASSEMBLYAI_USD_PER_HOUR: conDefecto(z.coerce.number().positive(), 0.37),
 
   // Venta (Hotmart). Opcional hasta que exista el producto; el webhook rechaza todo si falta.

@@ -114,11 +114,20 @@ export async function generatePiezas(
       return { piezas: parsed.data, tokensIn, tokensOut, modelo };
     }
 
-    // Reinyecta el error de validación al modelo en vez de reintentar a ciegas.
+    // Reinyecta el error de validación al modelo en vez de reintentar a ciegas. La API exige que
+    // cada tool_use tenga su tool_result en el mensaje siguiente (si no, rechaza con 400).
+    const motivo = parsed.error.issues
+      .slice(0, 5)
+      .map((i) => `${i.path.join(".") || "(raíz)"}: ${i.message}`)
+      .join("; ");
+    console.warn(`[ai] salida no válida (intento ${attempt + 1}, stop_reason=${res.stop_reason}): ${motivo}`);
     messages.push({ role: "assistant", content: res.content });
+    const correccion = `La entrega no validó (${motivo}). Corrige y vuelve a llamar la herramienta con las 3 piezas completas.`;
     messages.push({
       role: "user",
-      content: `La entrega no validó: ${parsed.error.message}. Corrige y volvé a llamar la herramienta.`,
+      content: toolUse
+        ? [{ type: "tool_result", tool_use_id: toolUse.id, is_error: true, content: correccion }]
+        : correccion,
     });
   }
 
