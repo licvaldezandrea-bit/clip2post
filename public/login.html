@@ -118,7 +118,7 @@
   <div id="sentWrap" class="sent">
     <div class="check"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
     <h2>Te mandamos el acceso</h2>
-    <p>Abre el link desde tu correo, o escribe el código de 6 dígitos que te enviamos a <b id="sentEmail" style="color:var(--text-1)"></b> aquí abajo.</p>
+    <p id="sentTexto">Abre el link desde tu correo, o escribe el código de 6 dígitos que te enviamos a <b id="sentEmail" style="color:var(--text-1)"></b> aquí abajo.</p>
     <div class="otp" id="otpGroup" role="group" aria-label="Código de 6 dígitos">
       <input maxlength="1" inputmode="numeric" autocomplete="one-time-code" aria-label="Dígito 1">
       <input maxlength="1" inputmode="numeric" autocomplete="one-time-code" aria-label="Dígito 2">
@@ -134,6 +134,7 @@
   </div>
 </main>
 
+<script src="auth-config.js"></script>
 <script>
   var emailInput = document.getElementById('emailInput');
   var emailField = document.getElementById('emailField');
@@ -143,6 +144,13 @@
   var otpErr = document.getElementById('otpErr');
   var otpGroup = document.getElementById('otpGroup');
   var emailActual = '';
+  var conCodigo = !!(window.C2P_AUTH && window.C2P_AUTH.codigoPorCorreo);
+  if (!conCodigo) {
+    document.querySelector('.sub').textContent = 'Sin contraseñas que recordar. Te mandamos un link a tu correo para entrar.';
+    document.getElementById('sentTexto').innerHTML = 'Abre el link del correo que te enviamos a <b id="sentEmail" style="color:var(--text-1)"></b>. Ábrelo desde este mismo navegador.';
+    document.getElementById('otpGroup').style.display = 'none';
+    document.getElementById('resendCode').textContent = 'Reenviar el link';
+  }
 
   function validEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
   function mostrarErrorEmail(msg){ emailErr.textContent = msg; emailField.classList.add('err'); emailErr.classList.add('show'); }
@@ -177,7 +185,7 @@
       document.getElementById('sentEmail').textContent = val;
       document.getElementById('formWrap').classList.add('hide');
       document.getElementById('sentWrap').classList.add('show');
-      document.querySelector('.otp input').focus();
+      if (conCodigo) document.querySelector('.otp input').focus();
     });
   });
 
@@ -230,10 +238,10 @@
   document.getElementById('resendCode').addEventListener('click', function(e){
     e.preventDefault();
     otpErr.classList.remove('show');
-    limpiarOtp();
+    if (conCodigo) limpiarOtp();
     var resentMsg = document.getElementById('resentMsg');
     enviarAcceso(emailActual, function(res){
-      resentMsg.textContent = res.ok ? 'Te mandamos un código nuevo.' : (res.data.error || 'No pudimos reenviarlo, intenta en un minuto.');
+      resentMsg.textContent = res.ok ? (conCodigo ? 'Te mandamos un código nuevo.' : 'Te mandamos un link nuevo.') : (res.data.error || 'No pudimos reenviarlo, intenta en un minuto.');
       resentMsg.style.color = res.ok ? '#34D399' : '#F87171';
       resentMsg.style.display = 'block';
       setTimeout(function(){ resentMsg.style.display = 'none'; }, 4000);
