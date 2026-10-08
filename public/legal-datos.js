@@ -3,7 +3,7 @@
 window.C2P_LEGAL = {
   titular: 'Andrea Valdez',
   pais: 'Argentina',
-  contacto: 'andreamariavaldez.81@gmail.com'
+  contacto: ''
 };
 
 document.addEventListener('DOMContentLoaded', function () {
