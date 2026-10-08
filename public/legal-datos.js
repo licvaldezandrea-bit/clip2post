@@ -3,7 +3,7 @@
 window.C2P_LEGAL = {
   titular: 'Andrea Valdez',
   pais: 'Argentina',
-  contacto: ''
+  contacto: 'imaginaciondigitalpower@gmail.com'
 };
 
 document.addEventListener('DOMContentLoaded', function () {
