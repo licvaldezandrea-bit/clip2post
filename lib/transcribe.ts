@@ -2,43 +2,62 @@ import { getEnv } from "@/lib/env";
 import { callWithRetry } from "@/lib/circuit-breaker";
 
 // Transcripción voz→texto con AssemblyAI (decisión técnica documentada en ESTADO.md).
-// AssemblyAI acepta una URL de audio/video pública o un archivo subido a su endpoint
-// /upload — nunca recibe la clave del cliente: esto corre solo en el servidor (BFF).
-//
-// LÍMITE ACTUAL (documentado, no oculto): solo transcribe un audioUrl real (un archivo
-// que el usuario subió a Supabase Storage, o una URL directa a un .mp3/.mp4 público).
-// Pegar un link de YouTube todavía NO funciona: haría falta un paso extra para bajar
-// el audio de ese video primero, que no está construido en esta sesión (ver ESTADO.md).
+// Corre solo en el servidor (BFF): la clave nunca llega al navegador.
+// Acepta una URL https pública (un archivo subido por el usuario llega como URL firmada
+// de Supabase Storage). Los links de YouTube no se soportan todavía (ver lib/url-safety.ts).
 const BASE = "https://api.assemblyai.com/v2";
 
-export async function transcribeAudio(audioUrl: string): Promise<string> {
+class HttpError extends Error {
+  constructor(
+    public status: number,
+    mensaje: string,
+  ) {
+    super(mensaje);
+  }
+}
+
+export async function transcribeAudio(
+  audioUrl: string,
+  señal?: AbortSignal,
+): Promise<{ texto: string; duracionSeg: number }> {
   const env = getEnv();
   const headers = { authorization: env.ASSEMBLYAI_API_KEY, "content-type": "application/json" };
 
-  const submit = await callWithRetry(() =>
-    fetch(`${BASE}/transcript`, {
+  const { id } = await callWithRetry(async () => {
+    const res = await fetch(`${BASE}/transcript`, {
       method: "POST",
       headers,
-      body: JSON.stringify({ audio_url: audioUrl, language_code: "es" }),
-    }),
-  );
-  if (!submit.ok) {
-    throw new Error(`AssemblyAI rechazó el trabajo: ${submit.status} ${await submit.text()}`);
-  }
-  const { id } = (await submit.json()) as { id: string };
+      body: JSON.stringify({ audio_url: audioUrl, language_detection: true }),
+      signal: señal,
+    });
+    if (!res.ok) throw new HttpError(res.status, `AssemblyAI rechazó el trabajo (${res.status})`);
+    return (await res.json()) as { id: string };
+  });
 
-  // Poll con backoff simple. Timeout total ~5 min — un video largo puede tardar más;
-  // si eso pasa seguido, mover esto a un worker real (ver 30-INTEGRACION-IA.md).
+  // Poll cada 3s. Tope ~4 min: si un video lo supera, la ruta responde con un error claro
+  // (para videos largos hace falta el worker asíncrono, ver ESTADO.md).
   const inicio = Date.now();
-  const TIMEOUT_MS = 5 * 60 * 1000;
+  const TIMEOUT_MS = 4 * 60 * 1000;
   while (Date.now() - inicio < TIMEOUT_MS) {
-    const poll = await fetch(`${BASE}/transcript/${id}`, { headers });
-    const data = (await poll.json()) as { status: string; text?: string; error?: string };
+    const poll = await fetch(`${BASE}/transcript/${id}`, { headers, signal: señal });
+    if (!poll.ok) throw new HttpError(poll.status, `AssemblyAI no respondió (${poll.status})`);
+    const data = (await poll.json()) as {
+      status: string;
+      text?: string;
+      error?: string;
+      audio_duration?: number;
+    };
 
-    if (data.status === "completed") return data.text ?? "";
+    if (data.status === "completed") {
+      return { texto: data.text ?? "", duracionSeg: data.audio_duration ?? 0 };
+    }
     if (data.status === "error") throw new Error(`AssemblyAI falló: ${data.error}`);
 
     await new Promise((r) => setTimeout(r, 3000));
   }
-  throw new Error("Timeout esperando la transcripción");
+  throw new Error("TIMEOUT_TRANSCRIPCION");
+}
+
+export function costoTranscripcionUsd(duracionSeg: number): number {
+  return (duracionSeg / 3600) * getEnv().ASSEMBLYAI_USD_PER_HOUR;
 }

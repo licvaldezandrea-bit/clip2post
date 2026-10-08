@@ -1,26 +1,30 @@
 @import "tailwindcss";
 
+/* Tokens de FICHA-ARTE.md (dirección A "Estudio Confiable"): carbón-marrón cálido, naranja solo en la acción. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #1a140d;
+  --surface: #241c13;
+  --hundido: #120d08;
+  --text-1: #f5efe6;
+  --text-2: #b0a392;
+  --accent: #ff7a33;
+  --accent-2: #e8b354;
+  --line: rgba(245, 239, 230, 0.09);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-hundido: var(--hundido);
+  --color-text-1: var(--text-1);
+  --color-text-2: var(--text-2);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text-1);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
 }

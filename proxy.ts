@@ -1,8 +1,12 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-// Refresca la sesión de Supabase en cada request (patrón estándar @supabase/ssr).
-// Sin esto, el token expira y el usuario se desloguea solo a mitad de sesión.
+// 1) Refresca la sesión de Supabase en cada request (sin esto el token expira a mitad de sesión).
+// 2) Protege la app: sin sesión no se entra a /app; con sesión, /login te manda a la app.
+// La seguridad real de los datos NO depende de esto: cada API valida la sesión y RLS protege la base.
+const RUTAS_PRIVADAS = ["/app", "/app.html"];
+const RUTAS_DE_ENTRADA = ["/login", "/login.html"];
+
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });
 
@@ -17,21 +21,26 @@ export async function proxy(request: NextRequest) {
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
           response = NextResponse.next({ request });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options),
-          );
+          cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
         },
       },
     },
   );
 
-  // Toca la sesión para que se refresque si hace falta (el resultado no se usa acá;
-  // cada ruta protegida valida el usuario de nuevo del lado del servidor).
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const ruta = request.nextUrl.pathname;
 
+  if (!user && RUTAS_PRIVADAS.includes(ruta)) {
+    return NextResponse.redirect(new URL("/login.html", request.url));
+  }
+  if (user && RUTAS_DE_ENTRADA.includes(ruta)) {
+    return NextResponse.redirect(new URL("/app.html", request.url));
+  }
   return response;
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|webp)$).*)"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|assets/|.*\\.(?:svg|png|jpg|jpeg|webp|json|ico)$).*)"],
 };
